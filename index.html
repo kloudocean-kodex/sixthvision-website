@@ -615,9 +615,15 @@
         <h2>Tell us about the property.</h2>
       </div>
       <div class="contact-grid">
-        <form class="reveal" name="enquiry" method="POST" action="/thank-you.html" data-netlify="true" netlify-honeypot="company">
-          <input type="hidden" name="form-name" value="enquiry">
-          <p style="display:none"><label>Don&rsquo;t fill this out: <input name="company"></label></p>
+        <!-- Contact form via Web3Forms (works on Cloudflare Pages). TODO: paste your Web3Forms access
+             key below (get it free at web3forms.com by entering sixthvision.mel@gmail.com). Until then
+             the form won't send. -->
+        <form class="reveal" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="YOUR-WEB3FORMS-KEY">
+          <input type="hidden" name="subject" value="New enquiry — Sixth Vision website">
+          <input type="hidden" name="from_name" value="Sixth Vision website">
+          <input type="hidden" name="redirect" value="https://sixthvision.com.au/thank-you.html">
+          <input type="checkbox" name="botcheck" style="display:none !important" tabindex="-1" autocomplete="off" aria-hidden="true">
           <div class="form-row">
             <div class="field">
               <label for="f-name">Name *</label>
