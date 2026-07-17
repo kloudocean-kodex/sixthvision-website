@@ -1023,7 +1023,20 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
   color: var(--ink); white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-.offer-price-card { text-align: center; padding-top: 6px; }
+.offer-price-card {
+  text-align: center;
+  position: relative;
+  padding: clamp(30px, 7vw, 46px) clamp(22px, 6vw, 42px) clamp(28px, 6vw, 40px);
+  background: linear-gradient(180deg, var(--tint-cream), var(--surface) 62%);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  box-shadow: 0 24px 52px -30px rgba(35,33,29,.42);
+  overflow: hidden;
+}
+.offer-price-card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
 .offer-was {
   font-family: var(--serif); font-size: 1.35rem; color: var(--muted);
   text-decoration: line-through;
@@ -1038,25 +1051,12 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
 .offer-now sup { font-size: .38em; top: -1.15em; color: var(--gold-deep); }
 .offer-terms { font-size: .8rem; color: var(--muted); max-width: 30ch; margin: 14px auto 26px; }
 
-/* Desktop: lift the price into a centred "ticket" so it anchors the panel at
-   the right-middle instead of stranding in the top-right corner. Mobile keeps
-   the flat stacked layout (owner-approved) — everything here is min-width 881. */
+/* The price "ticket" enclosure (gold hairline, cream gradient, float shadow)
+   now applies at ALL widths so mobile matches desktop. Desktop-only here: the
+   two-column grid-centring that places it at the right-middle. */
 @media (min-width: 881px) {
   .offer-panel { align-items: center; }
-  .offer-price-card {
-    align-self: center;
-    position: relative;
-    padding: 46px 42px 40px;
-    background: linear-gradient(180deg, var(--tint-cream), var(--surface) 62%);
-    border: 1px solid var(--line-soft);
-    border-radius: var(--radius);
-    box-shadow: 0 24px 52px -30px rgba(35,33,29,.42);
-    overflow: hidden;
-  }
-  .offer-price-card::before {
-    content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
+  .offer-price-card { align-self: center; }
   .offer-price-card .btn { margin-top: 4px; padding-left: 34px; padding-right: 34px; }
 }
 
