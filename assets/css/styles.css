@@ -6,52 +6,52 @@
 /* ---- Fonts (self-hosted, latin subset) ---------------------------------- */
 @font-face {
   font-family: 'Marcellus';
-  src: url('../fonts/Marcellus-400.woff2') format('woff2');
+  src: url('../fonts/marcellus-400.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Playfair Display';
-  src: url('../fonts/PlayfairDisplay-400.woff2') format('woff2');
+  src: url('../fonts/playfairdisplay-400.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Playfair Display';
-  src: url('../fonts/PlayfairDisplay-500.woff2') format('woff2');
+  src: url('../fonts/playfairdisplay-500.woff2') format('woff2');
   font-weight: 500; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Playfair Display';
-  src: url('../fonts/PlayfairDisplay-400-italic.woff2') format('woff2');
+  src: url('../fonts/playfairdisplay-400-italic.woff2') format('woff2');
   font-weight: 400; font-style: italic; font-display: swap;
 }
 @font-face {
   font-family: 'Cormorant Garamond';
-  src: url('../fonts/CormorantGaramond-300.woff2') format('woff2');
+  src: url('../fonts/cormorantgaramond-300.woff2') format('woff2');
   font-weight: 300; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Cormorant Garamond';
-  src: url('../fonts/CormorantGaramond-400.woff2') format('woff2');
+  src: url('../fonts/cormorantgaramond-400.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Cormorant Garamond';
-  src: url('../fonts/CormorantGaramond-500.woff2') format('woff2');
+  src: url('../fonts/cormorantgaramond-500.woff2') format('woff2');
   font-weight: 500; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Jost';
-  src: url('../fonts/Jost-300.woff2') format('woff2');
+  src: url('../fonts/jost-300.woff2') format('woff2');
   font-weight: 300; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Jost';
-  src: url('../fonts/Jost-400.woff2') format('woff2');
+  src: url('../fonts/jost-400.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: 'Jost';
-  src: url('../fonts/Jost-500.woff2') format('woff2');
+  src: url('../fonts/jost-500.woff2') format('woff2');
   font-weight: 500; font-style: normal; font-display: swap;
 }
 

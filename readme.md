@@ -58,7 +58,7 @@ Netlify dashboard under "Forms" once deployed; it posts to `/thank-you.html`).
 
 **Editing CSS/JS:** the HTML links `assets/css/styles.min.css` + `assets/js/main.min.js`. Edit the readable
 sources `styles.css` / `main.js`, then run `python C:\Users\gawar\Downloads\sixthvision-final-minify.py`
-and bump the `?v=` version in `index.html` + `thank-you.html`. Current version: **`v=20260717b`**.
+and bump the `?v=` version in `index.html` + `thank-you.html`. Current version: **`v=20260717c`**.
 
 **Latest visual polish (v=…d):** the feature photos (intro interior, showreel, editing before/after,
 virtual staging) now read as *framed gallery prints* — a soft warm radial halo behind each section, a fine
