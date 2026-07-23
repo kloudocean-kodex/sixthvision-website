@@ -79,12 +79,33 @@
 </script>
 
 <!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-M6TSWTEBM9"></script>
 <script>
+  /* Google Analytics — config is queued immediately, but the 164 KiB gtag.js
+     is loaded only AFTER first paint (window load + idle) or on first user
+     interaction, whichever comes first. This keeps it off the mobile critical
+     path so it never competes with the hero image for bandwidth. Analytics
+     still fire; nothing visible changes. */
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-M6TSWTEBM9');
+  (function () {
+    var done = false;
+    function loadGA(){
+      if (done) return; done = true;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-M6TSWTEBM9';
+      document.head.appendChild(s);
+    }
+    function schedule(){ ('requestIdleCallback' in window)
+      ? requestIdleCallback(loadGA, { timeout: 3000 }) : setTimeout(loadGA, 1500); }
+    if (document.readyState === 'complete') schedule();
+    else window.addEventListener('load', schedule, { once: true });
+    ['scroll','pointerdown','keydown','touchstart'].forEach(function(e){
+      window.addEventListener(e, loadGA, { once: true, passive: true });
+    });
+  })();
 </script>
 </head>
 <body>
@@ -343,7 +364,7 @@
           </span>
         </button>
       </div>
-      <p class="showreel-caption">63 French Road, Greenvale &mdash; filmed and edited by Sixth Vision.</p>
+      <p class="showreel-caption">A selection of recent Melbourne listings &mdash; filmed and edited by Sixth Vision.</p>
     </div>
   </section>
 
@@ -449,8 +470,8 @@
   <section class="drone-band" aria-label="Aerial photography">
     <img src="assets/img/drone-band-2000.webp"
          srcset="assets/img/drone-band-1000.webp 1000w, assets/img/drone-band-2000.webp 2000w"
-         sizes="100vw" width="2000" height="857" loading="lazy" decoding="async" data-parallax
-         alt="Night aerial photograph of a Melbourne property, streetlights tracing the block below">
+         sizes="100vw" width="2000" height="1000" loading="lazy" decoding="async" data-parallax
+         alt="Dusk aerial photograph of a Melbourne home, its grounds and boundary traced in light from four hundred feet">
     <div class="band-caption">
       <div class="container">
         <span class="eyebrow">From above</span>
