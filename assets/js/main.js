@@ -103,7 +103,7 @@
     playBtn.addEventListener('click', function () {
       var frame = document.getElementById('showreel-frame');
       var video = document.createElement('video');
-      video.src = 'assets/video/showreel.mp4';
+      video.src = 'assets/video/showreel.mp4?v=2';
       video.controls = true;
       video.autoplay = true;
       video.playsInline = true;
