@@ -1361,3 +1361,12 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
 }
 .intro-photo img { box-shadow: inset 0 0 0 1px rgba(233,214,168,.7); }
 
+
+
+/* Studio credit — quiet, on its own line, never competing with the client's mark */
+.footer-craft{
+  display:block; margin-top:8px;
+  font-size:.78rem; letter-spacing:.06em; color:rgba(244,239,230,.42);
+}
+.footer-craft a{color:var(--gold-soft); text-decoration:none}
+.footer-craft a:hover{text-decoration:underline}

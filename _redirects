@@ -1,0 +1,58 @@
+# Cloudflare Pages redirects — 301s from the old WordPress site's indexed URLs.
+# The rebuild is one page, so every old section maps to its equivalent chapter
+# anchor. This preserves the link equity those URLs have already earned instead
+# of dropping ~8 indexed pages into 404s on cutover.
+#
+# Format: /old-path  /new-path  status
+
+# --- old service pages -> the chapter that now covers them ---
+/real-estate-photography      /#work      301
+/real-estate-photography/     /#work      301
+/commercial-photography       /#work      301
+/commercial-photography/      /#work      301
+/photography                  /#work      301
+/photography/                 /#work      301
+/video-drone-media            /#light     301
+/video-drone-media/           /#light     301
+/video                        /#light     301
+/video/                       /#light     301
+/drone                        /#light     301
+/drone/                       /#light     301
+/aerial                       /#light     301
+/aerial/                      /#light     301
+/floor-plans                  /#measure   301
+/floor-plans/                 /#measure   301
+/precision-floor-plans        /#measure   301
+/precision-floor-plans/       /#measure   301
+
+# --- portfolio / about / contact ---
+/portfolio                    /#work      301
+/portfolio/                   /#work      301
+/gallery                      /#work      301
+/gallery/                     /#work      301
+/about                        /#close     301
+/about/                       /#close     301
+/about-us                     /#close     301
+/about-us/                    /#close     301
+/contact                      /#close     301
+/contact/                     /#close     301
+/contact-us                   /#close     301
+/contact-us/                  /#close     301
+/services                     /#close     301
+/services/                    /#close     301
+
+# --- WordPress cruft: send to home rather than let it 404 ---
+/home                         /           301
+/home/                        /           301
+/index.php                    /           301
+/wp-admin/*                   /           301
+/wp-login.php                 /           301
+/category/*                   /           301
+/tag/*                        /           301
+/author/*                     /           301
+/feed                         /           301
+/feed/                        /           301
+# NOTE: no query-string rules here. Cloudflare Pages matches on PATH only, so a
+# source like "/?page_id=*" is parsed as "/" and redirects the homepage to
+# itself — an infinite loop (ERR_TOO_MANY_REDIRECTS). Old ?page_id= URLs will
+# simply serve the homepage, which is the desired outcome anyway.
