@@ -5,26 +5,6 @@
 
 /* ---- Fonts (self-hosted, latin subset) ---------------------------------- */
 @font-face {
-  font-family: 'Marcellus';
-  src: url('../fonts/marcellus-400.woff2') format('woff2');
-  font-weight: 400; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Playfair Display';
-  src: url('../fonts/playfairdisplay-400.woff2') format('woff2');
-  font-weight: 400; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Playfair Display';
-  src: url('../fonts/playfairdisplay-500.woff2') format('woff2');
-  font-weight: 500; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: 'Playfair Display';
-  src: url('../fonts/playfairdisplay-400-italic.woff2') format('woff2');
-  font-weight: 400; font-style: italic; font-display: swap;
-}
-@font-face {
   font-family: 'Cormorant Garamond';
   src: url('../fonts/cormorantgaramond-300.woff2') format('woff2');
   font-weight: 300; font-style: normal; font-display: swap;
@@ -33,6 +13,11 @@
   font-family: 'Cormorant Garamond';
   src: url('../fonts/cormorantgaramond-400.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorantgaramond-400-italic.woff2') format('woff2');
+  font-weight: 400; font-style: italic; font-display: swap;
 }
 @font-face {
   font-family: 'Cormorant Garamond';
@@ -53,6 +38,30 @@
   font-family: 'Jost';
   src: url('../fonts/jost-500.woff2') format('woff2');
   font-weight: 500; font-style: normal; font-display: swap;
+}
+
+/* ---- Metric-matched fallbacks (kills font-swap CLS) ----------------------
+   Measured from the shipped woff2 files with FreeType, then expressed relative
+   to the local fallback each one substitutes for. While the webfont is still in
+   flight the fallback now occupies the SAME box, so the swap re-paints without
+   re-laying-out. If neither local() face exists (most Android devices), the
+   @font-face is simply invalid and the stack falls through to generic
+   serif/sans-serif exactly as it does today — no regression. */
+@font-face {
+  font-family: 'Cormorant Fallback';
+  src: local('Georgia'), local('Times New Roman'), local('Times');
+  size-adjust: 80.99%;
+  ascent-override: 114.09%;
+  descent-override: 35.43%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Jost Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
+  size-adjust: 87.12%;
+  ascent-override: 122.82%;
+  descent-override: 43.04%;
+  line-gap-override: 0%;
 }
 
 /* ---- Tokens -------------------------------------------------------------- */
@@ -88,8 +97,8 @@
   --section-pad: clamp(72px, 10vw, 140px);
 
   /* type — Cormorant Garamond: the thin, soft quiet-luxury serif of his references */
-  --serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  --sans: 'Jost', 'Segoe UI', system-ui, sans-serif;
+  --serif: 'Cormorant Garamond', 'Cormorant Fallback', Georgia, serif;
+  --sans: 'Jost', 'Jost Fallback', 'Segoe UI', system-ui, sans-serif;
   --fs-display: clamp(3rem, 6.4vw, 5.5rem);        /* hero H1 */
   --fs-h2: clamp(2.15rem, 4vw, 3.2rem);
   --fs-h3: clamp(1.5rem, 2.2vw, 1.8rem);
@@ -100,6 +109,11 @@
   /* motion */
   --ease-lux: cubic-bezier(.22, .61, .21, 1);
   --dur: .6s;
+
+  /* was referenced via var(--charcoal-soft, ...) but never defined */
+  --charcoal-soft: #4d483f;
+
+  color-scheme: light only;
 }
 
 /* ---- Reset / base -------------------------------------------------------- */
@@ -114,9 +128,11 @@ body {
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 img, video { max-width: 100%; height: auto; display: block; }
+/* <picture> is an inline wrapper that would otherwise introduce a baseline gap
+   and break the absolute-positioning contexts these images sit in. */
+picture { display: contents; }
 a { color: inherit; }
 
 /* ---- Paper grain — subtle, sitewide, so tints read as textured stock, not flat colour ---- */
@@ -125,8 +141,11 @@ body::after {
   position: fixed; inset: 0;
   z-index: 90;
   pointer-events: none;
-  opacity: .05;
-  mix-blend-mode: multiply;
+  opacity: .055;
+  /* mix-blend-mode: multiply removed — a fixed, full-viewport blended layer
+     forces the compositor to re-blend the whole screen on every scroll frame.
+     At 5% opacity over warm-light surfaces, normal alpha blending is visually
+     indistinguishable and costs nothing per frame. */
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.14  0 0 0 0 0.13  0 0 0 0 0.11  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-repeat: repeat;
 }
@@ -409,6 +428,10 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
+  /* the blanket rule below collapses animations to .01ms; with `both` fill that
+     would freeze the hero at its END frame (a permanent 6% crop). Park it at rest. */
+  .hero-media img { animation: none !important; transform: none !important; }
+  .scroll-cue::after { animation: none !important; }
   *, *::before, *::after {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
@@ -417,7 +440,7 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
 }
 
 /* ==========================================================================
-   PAGE â€” header / hero / sections
+   PAGE — header / hero / sections
    ========================================================================== */
 
 /* ---- Topbar (Sawyer-style utility strip; scrolls away) ---- */
@@ -650,6 +673,10 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
   animation: marquee-flow 52s linear infinite;
 }
 .marquee:hover .marquee-track { animation-play-state: paused; }
+/* JS clears .is-idle when the strip scrolls into view. An infinite 52s
+   transform animation otherwise keeps a compositor layer alive for the entire
+   session, on a strip that is off screen for most of it. */
+.marquee.is-idle .marquee-track { animation-play-state: paused; }
 @keyframes marquee-flow {
   from { transform: translateX(-50%); }
   to   { transform: translateX(0); }
@@ -753,12 +780,12 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
   transition: transform .45s var(--ease-lux), box-shadow .45s var(--ease-lux);
 }
 .scard:hover { transform: translateY(-.4em); box-shadow: var(--shadow-lg); }
-.scard > img {
+.scard img {
   position: absolute; inset: 0;
   width: 100%; height: 100%; object-fit: cover;
   transition: transform 1.2s var(--ease-lux);
 }
-.scard:hover > img { transform: scale(1.045); }
+.scard:hover img { transform: scale(1.045); }
 .scard-panel {
   position: absolute; top: 18px; left: 18px; right: 18px;
   background: rgba(252,250,246,.68);
@@ -869,10 +896,19 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
   display: flex; align-items: center; justify-content: center;
   background: rgba(20,17,12,.94);
   opacity: 0; visibility: hidden;
-  transition: opacity .4s var(--ease-lux), visibility .4s;
+  /* visibility is a DISCRETE property: given a plain `visibility .4s` it flips at
+     the 50% mark, so on open the dialog stayed hidden for the first 200ms — long
+     enough that focusing the close button and hit-testing its buttons both failed.
+     Flip it instantly on open (0s) and defer it on close (0s .4s) so the fade-out
+     still gets its full 400ms. */
+  transition: opacity .4s var(--ease-lux), visibility 0s linear .4s;
   padding: clamp(18px, 4vw, 48px);
 }
-.lightbox.is-open { opacity: 1; visibility: visible; }
+.lightbox.is-open {
+  opacity: 1; visibility: visible;
+  transition: opacity .4s var(--ease-lux), visibility 0s linear 0s;
+}
+.lightbox { overscroll-behavior: contain; }
 .lightbox-figure {
   position: relative; margin: 0;
   max-width: min(1140px, 92vw);
@@ -963,6 +999,12 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
   margin: 0;
   touch-action: pan-y;
 }
+/* the range input is deliberately invisible, so :focus-visible on it would be
+   too. Surface the focus ring on the handle the user is actually steering. */
+.ba:has(input[type="range"]:focus-visible) .ba-handle {
+  outline: 2px solid var(--gold-deep);
+  outline-offset: 3px;
+}
 .ba-note {
   margin-top: 18px; text-align: center;
   font-size: .84rem; color: var(--muted);
@@ -977,8 +1019,9 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
   position: absolute; left: 0; top: -12%;
   width: 100%; height: 124%;
   object-fit: cover;
-  will-change: transform;
 }
+/* layer promotion only while the band is on screen and actually moving */
+.drone-band.is-parallaxing img { will-change: transform; }
 .drone-band .band-caption {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
   padding: clamp(28px, 5vw, 56px) 0;
@@ -1050,6 +1093,42 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
 }
 .offer-now sup { font-size: .38em; top: -1.15em; color: var(--gold-deep); }
 .offer-terms { font-size: .8rem; color: var(--muted); max-width: 30ch; margin: 14px auto 26px; }
+
+/* ---- What the $650 buys, on the ticket itself -----------------------------
+   Four services, two columns, in the page's existing utility register (Jost
+   500, wide tracking, gold line-icons). No new tokens, no new type: the card
+   gains information without gaining voice. */
+.offer-includes {
+  margin: 24px 0 4px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-soft);
+}
+.offer-includes-label {
+  display: block;
+  font-family: var(--sans);
+  font-size: .64rem; font-weight: 500;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 17px;
+}
+.offer-includes ul {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px 12px;
+  text-align: left;
+}
+.offer-includes li {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--sans);
+  font-size: .66rem; font-weight: 500;
+  letter-spacing: .07em; text-transform: uppercase;
+  line-height: 1.35;
+  color: var(--body);
+}
+.offer-includes svg { flex: none; color: var(--gold); }
+@media (max-width: 400px) {
+  .offer-includes ul { grid-template-columns: minmax(0, 1fr); gap: 13px; }
+}
 
 /* The price "ticket" enclosure (gold hairline, cream gradient, float shadow)
    now applies at ALL widths so mobile matches desktop. Desktop-only here: the
@@ -1337,7 +1416,7 @@ p { margin: 0 0 1.2em; max-width: 65ch; }
 .brand:hover .brand-emblem { transform: scale(1.05); }
 /* Marquee logos a touch more present so real agencies read as endorsements */
 .marquee-track img { filter: grayscale(1) opacity(.6); }
-/* ===== Feature-photo "gallery wall" â€” warm halo backdrop + gold-hairline frame (2026-07-16) =====
+/* ===== Feature-photo "gallery wall" — warm halo backdrop + gold-hairline frame (2026-07-16) =====
    The hero interior, showreel, editing before/after and virtual-staging photos now sit on a soft
    warm halo behind a fine gold frame, so they read as framed gallery prints instead of floating
    on flat ivory. Uses :has() so no markup changes are needed. */

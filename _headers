@@ -11,7 +11,9 @@
   X-Frame-Options: SAMEORIGIN
   Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://api.web3forms.com https://*.google-analytics.com https://cloudflareinsights.com; media-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://api.web3forms.com
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  X-DNS-Prefetch-Control: off
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://api.web3forms.com https://*.google-analytics.com https://cloudflareinsights.com; media-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://api.web3forms.com; frame-ancestors 'self'
 
 /
   Cache-Control: public, max-age=0, must-revalidate
@@ -35,3 +37,13 @@
 /assets/fonts/*
   Cache-Control: public, max-age=31536000, immutable
   Access-Control-Allow-Origin: *
+
+# ---------------------------------------------------------------------------
+# Hardening note (2026-07-30): script-src still carries 'unsafe-inline' because
+# the GA bootstrap is inline. It can be replaced with a hash, which drops
+# 'unsafe-inline' entirely. The hash of the CURRENT inline script is:
+#   'sha256-awf7vw/zBFP6c+b/Oht/1blS/N1a4tUi5WF7CBFgTM4='
+# Left commented rather than applied: if anyone edits that inline block by even
+# one byte, the hash stops matching, the browser silently blocks the script and
+# analytics dies with no visible symptom. Only switch this on alongside a build
+# step that recomputes the hash automatically.

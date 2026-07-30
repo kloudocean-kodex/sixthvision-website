@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
-Disallow: /thank-you.html
-Disallow: /design-system.html
+
+# NOTE: /thank-you.html and /design-system.html are NOT disallowed here on
+# purpose. Both carry <meta name="robots" content="noindex">, and a crawler that
+# is blocked from fetching a page can never read the noindex it contains — the
+# two directives cancel each other out. Letting Google fetch and obey the
+# noindex is the combination that actually keeps them out of the index.
 
 Sitemap: https://sixthvision.com.au/sitemap.xml

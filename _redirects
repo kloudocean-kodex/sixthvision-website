@@ -3,57 +3,69 @@
 # anchor. This preserves the link equity those URLs have already earned instead
 # of dropping ~8 indexed pages into 404s on cutover.
 #
+# 2026-07-30 — FIXED. This file previously pointed 22 rules at /#light, /#measure
+# and /#close. None of those ids exist on the page. The real section ids are:
+#   #work  #services  #package  #guarantee  #contact  #virtual-staging  #top
+# Every one of those redirects therefore landed the visitor at the top of the
+# homepage with a dead fragment. Remapped below, verified against index.html.
+#
 # Format: /old-path  /new-path  status
 
 # --- old service pages -> the chapter that now covers them ---
-/real-estate-photography      /#work      301
-/real-estate-photography/     /#work      301
-/commercial-photography       /#work      301
-/commercial-photography/      /#work      301
-/photography                  /#work      301
-/photography/                 /#work      301
-/video-drone-media            /#light     301
-/video-drone-media/           /#light     301
-/video                        /#light     301
-/video/                       /#light     301
-/drone                        /#light     301
-/drone/                       /#light     301
-/aerial                       /#light     301
-/aerial/                      /#light     301
-/floor-plans                  /#measure   301
-/floor-plans/                 /#measure   301
-/precision-floor-plans        /#measure   301
-/precision-floor-plans/       /#measure   301
+/real-estate-photography      /#work            301
+/real-estate-photography/     /#work            301
+/commercial-photography       /#work            301
+/commercial-photography/      /#work            301
+/photography                  /#work            301
+/photography/                 /#work            301
+/video-drone-media            /#services        301
+/video-drone-media/           /#services        301
+/video                        /#services        301
+/video/                       /#services        301
+/drone                        /#services        301
+/drone/                       /#services        301
+/aerial                       /#services        301
+/aerial/                      /#services        301
+/floor-plans                  /#services        301
+/floor-plans/                 /#services        301
+/precision-floor-plans        /#services        301
+/precision-floor-plans/       /#services        301
+/virtual-staging              /#virtual-staging 301
+/virtual-staging/             /#virtual-staging 301
 
 # --- portfolio / about / contact ---
-/portfolio                    /#work      301
-/portfolio/                   /#work      301
-/gallery                      /#work      301
-/gallery/                     /#work      301
-/about                        /#close     301
-/about/                       /#close     301
-/about-us                     /#close     301
-/about-us/                    /#close     301
-/contact                      /#close     301
-/contact/                     /#close     301
-/contact-us                   /#close     301
-/contact-us/                  /#close     301
-/services                     /#close     301
-/services/                    /#close     301
+/portfolio                    /#work            301
+/portfolio/                   /#work            301
+/gallery                      /#work            301
+/gallery/                     /#work            301
+# no "about" section exists on the one-pager, so these go to the top of it
+/about                        /                 301
+/about/                       /                 301
+/about-us                     /                 301
+/about-us/                    /                 301
+/contact                      /#contact         301
+/contact/                     /#contact         301
+/contact-us                   /#contact         301
+/contact-us/                  /#contact         301
+/services                     /#services        301
+/services/                    /#services        301
+/pricing                      /#package         301
+/pricing/                     /#package         301
 
 # --- WordPress cruft: send to home rather than let it 404 ---
-/home                         /           301
-/home/                        /           301
-/index.php                    /           301
-/wp-admin/*                   /           301
-/wp-login.php                 /           301
-/category/*                   /           301
-/tag/*                        /           301
-/author/*                     /           301
-/feed                         /           301
-/feed/                        /           301
-/wp-content/*                 /           301
-/wp-includes/*                /           301
+/home                         /                 301
+/home/                        /                 301
+/index.php                    /                 301
+/wp-admin/*                   /                 301
+/wp-login.php                 /                 301
+/xmlrpc.php                   /                 301
+/category/*                   /                 301
+/tag/*                        /                 301
+/author/*                     /                 301
+/feed                         /                 301
+/feed/                        /                 301
+/wp-content/*                 /                 301
+/wp-includes/*                /                 301
 # NOTE: no query-string rules here. Cloudflare Pages matches on PATH only, so a
 # source like "/?page_id=*" is parsed as "/" and redirects the homepage to
 # itself — an infinite loop (ERR_TOO_MANY_REDIRECTS). Old ?page_id= URLs will

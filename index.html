@@ -16,6 +16,8 @@
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_AU">
 <meta name="twitter:card" content="summary_large_image">
+<meta property="og:image:alt" content="A Melbourne home photographed at dusk by Sixth Vision">
+<meta name="theme-color" content="#fdfbf7">
 <link rel="canonical" href="https://sixthvision.com.au/">
 
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -23,10 +25,10 @@
 <link rel="preload" href="assets/fonts/cormorantgaramond-500.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jost-300.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jost-500.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="assets/img/hero-placeholder-960.webp" media="(max-width: 700px)" fetchpriority="high">
-<link rel="preload" as="image" imagesrcset="assets/img/hero-placeholder-1600.webp 1600w, assets/img/hero-placeholder-2400.webp 2400w" imagesizes="100vw" media="(min-width: 701px)" fetchpriority="high">
+<link rel="preload" as="image" type="image/avif" imagesrcset="assets/img/hero-placeholder-800.avif 800w, assets/img/hero-placeholder-960.avif 960w" imagesizes="100vw" media="(max-width: 700px)" fetchpriority="high">
+<link rel="preload" as="image" type="image/avif" imagesrcset="assets/img/hero-placeholder-1600.avif 1600w, assets/img/hero-placeholder-2400.avif 2400w" imagesizes="100vw" media="(min-width: 701px)" fetchpriority="high">
 
-<link rel="stylesheet" href="assets/css/styles.min.css?v=20260727a">
+<link rel="stylesheet" href="assets/css/styles.min.css?v=20260730b">
 
 <script type="application/ld+json">
 {
@@ -54,6 +56,21 @@
         "https://www.instagram.com/sixthvision.mel",
         "https://www.facebook.com/sixthvisionmel/"
       ],
+      "makesOffer": {
+        "@type": "Offer",
+        "name": "The Ultimate Real Estate Marketing Package",
+        "description": "Photography, floor plan, drone and cinematic video for one Melbourne listing, delivered within 24 hours.",
+        "price": "650",
+        "priceCurrency": "AUD",
+        "availability": "https://schema.org/LimitedAvailability",
+        "url": "https://sixthvision.com.au/#package",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Real estate marketing package",
+          "serviceType": ["Real Estate Photography", "Floor Plans", "Drone / Aerial Photography", "Real Estate Videography"],
+          "areaServed": "Melbourne, VIC, Australia"
+        }
+      },
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
         "name": "Real estate media services",
@@ -66,6 +83,17 @@
           { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Virtual Tours", "areaServed": "Melbourne, VIC, Australia" } }
         ]
       }
+    },
+    {
+      "@type": "VideoObject",
+      "@id": "https://sixthvision.com.au/#showreel",
+      "name": "Sixth Vision showreel — Melbourne real estate videography",
+      "description": "A selection of recent Melbourne listings, filmed and edited by Sixth Vision.",
+      "thumbnailUrl": "https://sixthvision.com.au/assets/img/showreel-1600.webp",
+      "contentUrl": "https://sixthvision.com.au/assets/video/showreel.mp4",
+      "uploadDate": "2026-07-16",
+      "duration": "PT1M12S",
+      "publisher": { "@id": "https://sixthvision.com.au/#business" }
     },
     {
       "@type": "WebSite",
@@ -173,8 +201,19 @@
       <!-- ACTIVE hero = the owner's chosen editorial interior. To open on his own
            twilight-exterior craft instead, swap "hero-placeholder" -> "hero-twilight"
            in the three filenames below (those files are already in /assets/img). -->
+      <!-- One picture element, with the img as its DIRECT child. Nesting a second
+           picture element in here would orphan every source above it, because the
+           selection algorithm only consults sources that are siblings of the img. -->
       <picture>
-        <source media="(max-width: 700px)" srcset="assets/img/hero-placeholder-960.webp" width="960" height="1200">
+        <source type="image/avif" media="(max-width: 700px)"
+                srcset="assets/img/hero-placeholder-800.avif 800w, assets/img/hero-placeholder-960.avif 960w"
+                sizes="100vw" width="800" height="1000">
+        <source type="image/webp" media="(max-width: 700px)"
+                srcset="assets/img/hero-placeholder-800.webp 800w, assets/img/hero-placeholder-960.webp 960w"
+                sizes="100vw" width="800" height="1000">
+        <source type="image/avif"
+                srcset="assets/img/hero-placeholder-1600.avif 1600w, assets/img/hero-placeholder-2400.avif 2400w"
+                sizes="100vw" width="1600" height="900">
         <img src="assets/img/hero-placeholder-1600.webp"
              srcset="assets/img/hero-placeholder-1600.webp 1600w, assets/img/hero-placeholder-2400.webp 2400w"
              sizes="100vw" width="1600" height="900" alt="" fetchpriority="high" decoding="async">
@@ -232,11 +271,11 @@
         <p>Almost all house-hunting now begins online, and it is ruthlessly visual: buyers give a property&rsquo;s photographs most of their attention before a word of the description is read. Professional real estate photography Melbourne draws more views, more inspections &mdash; and better offers.</p>
       </div>
       <figure class="intro-photo reveal" style="--reveal-delay:.1s">
-        <img src="assets/img/intro-photo-1600.webp"
+        <picture><source type="image/avif" srcset="assets/img/intro-photo-960.avif 960w, assets/img/intro-photo-1600.avif 1600w" sizes="(max-width: 1240px) 92vw, 1120px" width="1600" height="900"><img src="assets/img/intro-photo-1600.webp"
              srcset="assets/img/intro-photo-960.webp 960w, assets/img/intro-photo-1600.webp 1600w"
              sizes="(max-width: 1240px) 92vw, 1120px"
              width="1600" height="900" loading="lazy" decoding="async"
-             alt="Styled living room with a curated gallery wall — real estate photography Melbourne by Sixth Vision">
+             alt="Styled living room with a curated gallery wall — real estate photography Melbourne by Sixth Vision"></picture>
         <figcaption>Our work exists to put your listing in that company.</figcaption>
       </figure>
       <div class="intro-figures intro-figures--center reveal" style="--reveal-delay:.2s">
@@ -263,11 +302,11 @@
       <div class="services-grid">
 
         <article class="scard reveal">
-          <img src="assets/img/card-photography-p900.webp"
+          <picture><source type="image/avif" srcset="assets/img/card-photography-p600.avif 600w, assets/img/card-photography-p900.avif 900w" sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw" width="900" height="1200"><img src="assets/img/card-photography-p900.webp"
                srcset="assets/img/card-photography-p600.webp 600w, assets/img/card-photography-p900.webp 900w"
                sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw"
                width="900" height="1200" loading="lazy" decoding="async"
-               alt="Warm, styled living room — real estate photography Melbourne by Sixth Vision">
+               alt="Warm, styled living room — real estate photography Melbourne by Sixth Vision"></picture>
           <div class="scard-panel">
             <h3>Photography</h3>
             <p>Real estate photography Melbourne, day and dusk &mdash; styled, corrected, listing-ready within 24 hours.</p>
@@ -276,11 +315,11 @@
         </article>
 
         <article class="scard reveal" style="--reveal-delay:.08s">
-          <img src="assets/img/card-video-p900.webp"
+          <picture><source type="image/avif" srcset="assets/img/card-video-p600.avif 600w, assets/img/card-video-p900.avif 900w" sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw" width="900" height="1200"><img src="assets/img/card-video-p900.webp"
                srcset="assets/img/card-video-p600.webp 600w, assets/img/card-video-p900.webp 900w"
                sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw"
                width="900" height="1200" loading="lazy" decoding="async"
-               alt="Styled home-office with cowhide rug and gallery prints &mdash; real estate videography Melbourne by Sixth Vision">
+               alt="Styled home-office with cowhide rug and gallery prints &mdash; real estate videography Melbourne by Sixth Vision"></picture>
           <div class="scard-panel">
             <h3>Videography</h3>
             <p>Real estate videography Melbourne: two-minute cinematic walkthroughs, with agent-led and auction editions.</p>
@@ -289,11 +328,11 @@
         </article>
 
         <article class="scard reveal" style="--reveal-delay:.16s">
-          <img src="assets/img/card-drone-p900.webp"
+          <picture><source type="image/avif" srcset="assets/img/card-drone-p600.avif 600w, assets/img/card-drone-p900.avif 900w" sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw" width="900" height="1200"><img src="assets/img/card-drone-p900.webp"
                srcset="assets/img/card-drone-p600.webp 600w, assets/img/card-drone-p900.webp 900w"
                sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw"
                width="900" height="1200" loading="lazy" decoding="async"
-               alt="Night-time drone aerial of a Melbourne home &mdash; aerial real estate photography Melbourne">
+               alt="Night-time drone aerial of a Melbourne home &mdash; aerial real estate photography Melbourne"></picture>
           <div class="scard-panel">
             <h3>Drone &amp; Aerial</h3>
             <p>Position, land and lifestyle in one frame, captured at the golden hour.</p>
@@ -302,11 +341,11 @@
         </article>
 
         <article class="scard reveal">
-          <img src="assets/img/card-twilight-p900.webp"
+          <picture><source type="image/avif" srcset="assets/img/card-twilight-p600.avif 600w, assets/img/card-twilight-p900.avif 900w" sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw" width="900" height="1200"><img src="assets/img/card-twilight-p900.webp"
                srcset="assets/img/card-twilight-p600.webp 600w, assets/img/card-twilight-p900.webp 900w"
                sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw"
                width="900" height="1200" loading="lazy" decoding="async"
-               alt="Two-storey Melbourne home at dusk with a pink sky &mdash; twilight real estate photography Melbourne">
+               alt="Two-storey Melbourne home at dusk with a pink sky &mdash; twilight real estate photography Melbourne"></picture>
           <div class="scard-panel">
             <h3>Twilight &amp; Dusk</h3>
             <p>The signature shot: warm windows against the last blush of evening.</p>
@@ -315,11 +354,11 @@
         </article>
 
         <article class="scard scard--solid reveal" style="--reveal-delay:.08s">
-          <img src="assets/img/card-floorplan-p900.webp"
+          <picture><source type="image/avif" srcset="assets/img/card-floorplan-p600.avif 600w, assets/img/card-floorplan-p900.avif 900w" sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw" width="900" height="1200"><img src="assets/img/card-floorplan-p900.webp"
                srcset="assets/img/card-floorplan-p600.webp 600w, assets/img/card-floorplan-p900.webp 900w"
                sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw"
                width="900" height="1200" loading="lazy" decoding="async"
-               alt="Clean two-storey floor plan drawn for a Melbourne property listing">
+               alt="Clean two-storey floor plan drawn for a Melbourne property listing"></picture>
           <div class="scard-panel">
             <h3>Floor Plans</h3>
             <p>Clean, accurate plans that answer the buyer&rsquo;s second question: how does it flow?</p>
@@ -328,11 +367,11 @@
         </article>
 
         <article class="scard reveal" style="--reveal-delay:.16s">
-          <img src="assets/img/card-tour-p900.webp"
+          <picture><source type="image/avif" srcset="assets/img/card-tour-p600.avif 600w, assets/img/card-tour-p900.avif 900w" sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw" width="900" height="1200"><img src="assets/img/card-tour-p900.webp"
                srcset="assets/img/card-tour-p600.webp 600w, assets/img/card-tour-p900.webp 900w"
                sizes="(max-width: 640px) 92vw, (max-width: 1020px) 46vw, 31vw"
                width="900" height="1200" loading="lazy" decoding="async"
-               alt="Warm timber-floored lounge captured for a 360-degree virtual tour, Melbourne">
+               alt="Warm timber-floored lounge captured for a 360-degree virtual tour, Melbourne"></picture>
           <div class="scard-panel">
             <h3>Virtual Tours</h3>
             <p>360&deg; walkthroughs, so any buyer can inspect from anywhere, at any hour.</p>
@@ -353,11 +392,11 @@
         <h2>Two minutes, at their very best.</h2>
       </div>
       <div class="showreel-frame reveal" id="showreel-frame">
-        <img src="assets/img/showreel-1600.webp"
+        <picture><source type="image/avif" srcset="assets/img/showreel-900.avif 900w, assets/img/showreel-1600.avif 1600w" sizes="(max-width: 1240px) 94vw, 1200px" width="1600" height="900"><img src="assets/img/showreel-1600.webp"
              srcset="assets/img/showreel-900.webp 900w, assets/img/showreel-1600.webp 1600w"
              sizes="(max-width: 1240px) 94vw, 1200px"
              width="1600" height="900" loading="lazy" decoding="async"
-             alt="Twilight over a converted church home on a broad lawn — a frame from the Sixth Vision showreel">
+             alt="Twilight over a converted church home on a broad lawn — a frame from the Sixth Vision showreel"></picture>
         <button class="play-btn" id="play-showreel" aria-label="Play the showreel video">
           <span class="play-ring">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
@@ -378,41 +417,21 @@
         <p class="lede">Every frame below is our own real estate photography Melbourne &mdash; shot for the city&rsquo;s agents and their vendors.</p>
       </div>
       <div class="work-grid">
-        <figure class="work-item reveal"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-dusk-1200.webp" data-lightbox-caption="Dusk exterior" aria-label="View larger: Dusk exterior"><img src="assets/img/gal-dusk-1200.webp" srcset="assets/img/gal-dusk-700.webp 700w, assets/img/gal-dusk-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Gabled Melbourne home at dusk &mdash; real estate photography Melbourne"></button><figcaption>Dusk exterior</figcaption></figure>
-        <figure class="work-item reveal" style="--reveal-delay:.06s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-kitchen-1200.webp" data-lightbox-caption="Kitchen" aria-label="View larger: Kitchen"><img src="assets/img/gal-kitchen-1200.webp" srcset="assets/img/gal-kitchen-700.webp 700w, assets/img/gal-kitchen-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="White kitchen with pendant lighting and stone island &mdash; real estate photography Melbourne"></button><figcaption>Kitchen</figcaption></figure>
-        <figure class="work-item reveal" style="--reveal-delay:.12s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-facade-1200.webp" data-lightbox-caption="Facade" aria-label="View larger: Facade"><img src="assets/img/gal-facade-1200.webp" srcset="assets/img/gal-facade-700.webp 700w, assets/img/gal-facade-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="French provincial two-storey facade &mdash; real estate photography Melbourne"></button><figcaption>Facade</figcaption></figure>
-        <figure class="work-item reveal"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-bedroom-1200.webp" data-lightbox-caption="Bedroom" aria-label="View larger: Bedroom"><img src="assets/img/gal-bedroom-1200.webp" srcset="assets/img/gal-bedroom-700.webp 700w, assets/img/gal-bedroom-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Softly styled bedroom in warm neutral tones &mdash; real estate photography Melbourne"></button><figcaption>Bedroom</figcaption></figure>
-        <figure class="work-item reveal" style="--reveal-delay:.06s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-dining-1200.webp" data-lightbox-caption="Dining" aria-label="View larger: Dining"><img src="assets/img/gal-dining-1200.webp" srcset="assets/img/gal-dining-700.webp 700w, assets/img/gal-dining-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Elegant dining room with garden outlook &mdash; real estate photography Melbourne"></button><figcaption>Dining</figcaption></figure>
-        <figure class="work-item reveal" style="--reveal-delay:.12s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-bath-1200.webp" data-lightbox-caption="Bathroom" aria-label="View larger: Bathroom"><img src="assets/img/gal-bath-1200.webp" srcset="assets/img/gal-bath-700.webp 700w, assets/img/gal-bath-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Marble ensuite with freestanding tub and gold tapware &mdash; real estate photography Melbourne"></button><figcaption>Bathroom</figcaption></figure>
-        <figure class="work-item reveal"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-stair-1200.webp" data-lightbox-caption="Stairwell" aria-label="View larger: Stairwell"><img src="assets/img/gal-stair-1200.webp" srcset="assets/img/gal-stair-700.webp 700w, assets/img/gal-stair-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Oak-tread staircase in a bright hallway &mdash; real estate photography Melbourne"></button><figcaption>Stairwell</figcaption></figure>
-        <figure class="work-item reveal" style="--reveal-delay:.06s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-court-1200.webp" data-lightbox-caption="Courtyard" aria-label="View larger: Courtyard"><img src="assets/img/gal-court-1200.webp" srcset="assets/img/gal-court-700.webp 700w, assets/img/gal-court-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Cape Dutch style home and paved courtyard at dusk &mdash; real estate photography Melbourne"></button><figcaption>Courtyard</figcaption></figure>
-        <figure class="work-item reveal" style="--reveal-delay:.12s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-alfresco-1200.webp" data-lightbox-caption="Alfresco" aria-label="View larger: Alfresco"><img src="assets/img/gal-alfresco-1200.webp" srcset="assets/img/gal-alfresco-700.webp 700w, assets/img/gal-alfresco-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Covered alfresco terrace glowing at dusk &mdash; real estate photography Melbourne"></button><figcaption>Alfresco</figcaption></figure>
-        <figure class="work-item reveal"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-skillion-1200.webp" data-lightbox-caption="Modern facade" aria-label="View larger: Modern facade"><img src="assets/img/gal-skillion-1200.webp" srcset="assets/img/gal-skillion-700.webp 700w, assets/img/gal-skillion-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Skillion-roof brick facade at dusk &mdash; real estate photography Melbourne"></button><figcaption>Modern facade</figcaption></figure>
-        <figure class="work-item reveal" style="--reveal-delay:.06s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-living-1200.webp" data-lightbox-caption="Living" aria-label="View larger: Living"><img src="assets/img/gal-living-1200.webp" srcset="assets/img/gal-living-700.webp 700w, assets/img/gal-living-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Open-plan living and dining, styled &mdash; real estate photography Melbourne"></button><figcaption>Living</figcaption></figure>
-        <figure class="work-item reveal" style="--reveal-delay:.12s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-hamptons-1200.webp" data-lightbox-caption="Hamptons facade" aria-label="View larger: Hamptons facade"><img src="assets/img/gal-hamptons-1200.webp" srcset="assets/img/gal-hamptons-700.webp 700w, assets/img/gal-hamptons-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Hamptons weatherboard two-storey at dusk &mdash; real estate photography Melbourne"></button><figcaption>Hamptons facade</figcaption></figure>
+        <figure class="work-item reveal"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-dusk-1200.webp" data-lightbox-caption="Dusk exterior" aria-label="View larger: Dusk exterior"><picture><source type="image/avif" srcset="assets/img/gal-dusk-700.avif 700w, assets/img/gal-dusk-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-dusk-1200.webp" srcset="assets/img/gal-dusk-700.webp 700w, assets/img/gal-dusk-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Gabled Melbourne home at dusk &mdash; real estate photography Melbourne"></picture></button><figcaption>Dusk exterior</figcaption></figure>
+        <figure class="work-item reveal" style="--reveal-delay:.06s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-kitchen-1200.webp" data-lightbox-caption="Kitchen" aria-label="View larger: Kitchen"><picture><source type="image/avif" srcset="assets/img/gal-kitchen-700.avif 700w, assets/img/gal-kitchen-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-kitchen-1200.webp" srcset="assets/img/gal-kitchen-700.webp 700w, assets/img/gal-kitchen-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="White kitchen with pendant lighting and stone island &mdash; real estate photography Melbourne"></picture></button><figcaption>Kitchen</figcaption></figure>
+        <figure class="work-item reveal" style="--reveal-delay:.12s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-facade-1200.webp" data-lightbox-caption="Facade" aria-label="View larger: Facade"><picture><source type="image/avif" srcset="assets/img/gal-facade-700.avif 700w, assets/img/gal-facade-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-facade-1200.webp" srcset="assets/img/gal-facade-700.webp 700w, assets/img/gal-facade-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="French provincial two-storey facade &mdash; real estate photography Melbourne"></picture></button><figcaption>Facade</figcaption></figure>
+        <figure class="work-item reveal"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-bedroom-1200.webp" data-lightbox-caption="Bedroom" aria-label="View larger: Bedroom"><picture><source type="image/avif" srcset="assets/img/gal-bedroom-700.avif 700w, assets/img/gal-bedroom-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-bedroom-1200.webp" srcset="assets/img/gal-bedroom-700.webp 700w, assets/img/gal-bedroom-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Softly styled bedroom in warm neutral tones &mdash; real estate photography Melbourne"></picture></button><figcaption>Bedroom</figcaption></figure>
+        <figure class="work-item reveal" style="--reveal-delay:.06s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-dining-1200.webp" data-lightbox-caption="Dining" aria-label="View larger: Dining"><picture><source type="image/avif" srcset="assets/img/gal-dining-700.avif 700w, assets/img/gal-dining-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-dining-1200.webp" srcset="assets/img/gal-dining-700.webp 700w, assets/img/gal-dining-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Elegant dining room with garden outlook &mdash; real estate photography Melbourne"></picture></button><figcaption>Dining</figcaption></figure>
+        <figure class="work-item reveal" style="--reveal-delay:.12s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-bath-1200.webp" data-lightbox-caption="Bathroom" aria-label="View larger: Bathroom"><picture><source type="image/avif" srcset="assets/img/gal-bath-700.avif 700w, assets/img/gal-bath-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-bath-1200.webp" srcset="assets/img/gal-bath-700.webp 700w, assets/img/gal-bath-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Marble ensuite with freestanding tub and gold tapware &mdash; real estate photography Melbourne"></picture></button><figcaption>Bathroom</figcaption></figure>
+        <figure class="work-item reveal"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-stair-1200.webp" data-lightbox-caption="Stairwell" aria-label="View larger: Stairwell"><picture><source type="image/avif" srcset="assets/img/gal-stair-700.avif 700w, assets/img/gal-stair-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-stair-1200.webp" srcset="assets/img/gal-stair-700.webp 700w, assets/img/gal-stair-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Oak-tread staircase in a bright hallway &mdash; real estate photography Melbourne"></picture></button><figcaption>Stairwell</figcaption></figure>
+        <figure class="work-item reveal" style="--reveal-delay:.06s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-court-1200.webp" data-lightbox-caption="Courtyard" aria-label="View larger: Courtyard"><picture><source type="image/avif" srcset="assets/img/gal-court-700.avif 700w, assets/img/gal-court-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-court-1200.webp" srcset="assets/img/gal-court-700.webp 700w, assets/img/gal-court-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Cape Dutch style home and paved courtyard at dusk &mdash; real estate photography Melbourne"></picture></button><figcaption>Courtyard</figcaption></figure>
+        <figure class="work-item reveal" style="--reveal-delay:.12s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-alfresco-1200.webp" data-lightbox-caption="Alfresco" aria-label="View larger: Alfresco"><picture><source type="image/avif" srcset="assets/img/gal-alfresco-700.avif 700w, assets/img/gal-alfresco-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-alfresco-1200.webp" srcset="assets/img/gal-alfresco-700.webp 700w, assets/img/gal-alfresco-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Covered alfresco terrace glowing at dusk &mdash; real estate photography Melbourne"></picture></button><figcaption>Alfresco</figcaption></figure>
+        <figure class="work-item reveal"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-skillion-1200.webp" data-lightbox-caption="Modern facade" aria-label="View larger: Modern facade"><picture><source type="image/avif" srcset="assets/img/gal-skillion-700.avif 700w, assets/img/gal-skillion-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-skillion-1200.webp" srcset="assets/img/gal-skillion-700.webp 700w, assets/img/gal-skillion-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Skillion-roof brick facade at dusk &mdash; real estate photography Melbourne"></picture></button><figcaption>Modern facade</figcaption></figure>
+        <figure class="work-item reveal" style="--reveal-delay:.06s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-living-1200.webp" data-lightbox-caption="Living" aria-label="View larger: Living"><picture><source type="image/avif" srcset="assets/img/gal-living-700.avif 700w, assets/img/gal-living-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-living-1200.webp" srcset="assets/img/gal-living-700.webp 700w, assets/img/gal-living-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Open-plan living and dining, styled &mdash; real estate photography Melbourne"></picture></button><figcaption>Living</figcaption></figure>
+        <figure class="work-item reveal" style="--reveal-delay:.12s"><button class="work-trigger" type="button" data-lightbox-src="assets/img/gal-hamptons-1200.webp" data-lightbox-caption="Hamptons facade" aria-label="View larger: Hamptons facade"><picture><source type="image/avif" srcset="assets/img/gal-hamptons-700.avif 700w, assets/img/gal-hamptons-1200.avif 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800"><img src="assets/img/gal-hamptons-1200.webp" srcset="assets/img/gal-hamptons-700.webp 700w, assets/img/gal-hamptons-1200.webp 1200w" sizes="(max-width: 760px) 46vw, 31vw" width="1200" height="800" loading="lazy" decoding="async" alt="Hamptons weatherboard two-storey at dusk &mdash; real estate photography Melbourne"></picture></button><figcaption>Hamptons facade</figcaption></figure>
       </div>
     </div>
   </section>
-
-  <!-- ============================ LIGHTBOX ============================ -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
-    <button class="lightbox-close" type="button" aria-label="Close viewer">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
-    </button>
-    <button class="lightbox-prev" type="button" aria-label="Previous photo">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
-    </button>
-    <button class="lightbox-next" type="button" aria-label="Next photo">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
-    </button>
-    <figure class="lightbox-figure">
-      <img class="lightbox-img" src="" alt="">
-      <div class="lightbox-meta">
-        <span class="lightbox-caption"></span>
-        <span class="lightbox-count"></span>
-      </div>
-    </figure>
-  </div>
 
   <!-- ============================ BEFORE / AFTER (editing) ============================ -->
   <section class="section section--blush">
@@ -425,8 +444,8 @@
       </div>
       <div class="ba-wrap reveal">
         <div class="ba">
-          <img class="ba-before" src="assets/img/placeholder-before-1600.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Living room before editing — flat light and muted colour">
-          <img class="ba-after" src="assets/img/placeholder-after-1600.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="The same living room after editing — balanced, warm and true to life">
+          <picture><source type="image/avif" srcset="assets/img/placeholder-before-1600.avif" width="1600" height="1000"><img class="ba-before" src="assets/img/placeholder-before-1600.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Living room before editing — flat light and muted colour"></picture>
+          <picture><source type="image/avif" srcset="assets/img/placeholder-after-1600.avif" width="1600" height="1000"><img class="ba-after" src="assets/img/placeholder-after-1600.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="The same living room after editing — balanced, warm and true to life"></picture>
           <span class="ba-label ba-label--before" aria-hidden="true">Before</span>
           <span class="ba-label ba-label--after" aria-hidden="true">After</span>
           <div class="ba-divider" aria-hidden="true"></div>
@@ -451,8 +470,8 @@
       </div>
       <div class="ba-wrap reveal">
         <div class="ba">
-          <img class="ba-before" src="assets/img/staging-before-1600.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Empty open-plan living and dining room before virtual staging, Melbourne">
-          <img class="ba-after" src="assets/img/staging-after-1600.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="The same room virtually staged with lounge chairs, dining and styling — real estate photography Melbourne">
+          <picture><source type="image/avif" srcset="assets/img/staging-before-1600.avif" width="1600" height="1000"><img class="ba-before" src="assets/img/staging-before-1600.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Empty open-plan living and dining room before virtual staging, Melbourne"></picture>
+          <picture><source type="image/avif" srcset="assets/img/staging-after-1600.avif" width="1600" height="1000"><img class="ba-after" src="assets/img/staging-after-1600.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="The same room virtually staged with lounge chairs, dining and styling — real estate photography Melbourne"></picture>
           <span class="ba-label ba-label--before" aria-hidden="true">Empty</span>
           <span class="ba-label ba-label--after" aria-hidden="true">Staged</span>
           <div class="ba-divider" aria-hidden="true"></div>
@@ -468,10 +487,10 @@
 
   <!-- ============================ DRONE BAND ============================ -->
   <section class="drone-band" aria-label="Aerial photography">
-    <img src="assets/img/drone-band-2000.webp?v=2"
+    <picture><source type="image/avif" srcset="assets/img/drone-band-1000.avif?v=2 1000w, assets/img/drone-band-2000.avif?v=2 2000w" sizes="100vw" width="2000" height="1000"><img src="assets/img/drone-band-2000.webp?v=2"
          srcset="assets/img/drone-band-1000.webp?v=2 1000w, assets/img/drone-band-2000.webp?v=2 2000w"
          sizes="100vw" width="2000" height="1000" loading="lazy" decoding="async" data-parallax
-         alt="Dusk aerial photograph of a Melbourne home, its grounds and boundary traced in light from four hundred feet">
+         alt="Dusk aerial photograph of a Melbourne home, its grounds and boundary traced in light from four hundred feet"></picture>
     <div class="band-caption">
       <div class="container">
         <span class="eyebrow">From above</span>
@@ -501,6 +520,27 @@
         <div class="offer-price-card">
           <span class="offer-was">Normally $1,250 + GST</span>
           <div class="offer-now"><sup>$</sup>650<span style="font-family:var(--sans);font-size:.24em;font-weight:500;letter-spacing:.06em;color:var(--gold-deep);vertical-align:baseline;margin-left:.16em;">+&nbsp;GST</span></div>
+          <div class="offer-includes">
+            <span class="offer-includes-label">Included</span>
+            <ul>
+              <li>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5a1.5 1.5 0 0 1 1.5-1.5h2l1.2-1.8h6.6L16.5 7h2A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.4"/></svg>
+                Photography
+              </li>
+              <li>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4.5" width="16" height="15" rx="1.6"/><path d="M4 12h6.4M10.4 4.5v15M10.4 15.4H20"/></svg>
+                Floor plan
+              </li>
+              <li>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6.2" cy="7.2" r="2.3"/><circle cx="17.8" cy="7.2" r="2.3"/><circle cx="6.2" cy="16.8" r="2.3"/><circle cx="17.8" cy="16.8" r="2.3"/><rect x="9.6" y="10.4" width="4.8" height="3.2" rx="1"/><path d="m7.9 8.9 1.9 1.8M16.1 8.9l-1.9 1.8M7.9 15.1l1.9-1.8M16.1 15.1l-1.9-1.8"/></svg>
+                Drone
+              </li>
+              <li>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2.2"/><path d="m10.2 9.6 4.8 2.4-4.8 2.4z"/></svg>
+                Cinematic video
+              </li>
+            </ul>
+          </div>
           <p class="offer-terms" style="display:inline-flex;align-items:center;gap:7px;justify-content:center;color:var(--gold-deep);">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.7-4.9 4.5 1.3 6.5L12 16.9 6.1 20.2l1.3-6.5-4.9-4.5 6.6-.7z"/></svg>
             Rated 5.0 on Google
@@ -727,6 +767,30 @@
 
 </main>
 
+<!-- ============================ LIGHTBOX ============================
+     Deliberately a SIBLING of the header, main and footer elements rather than a
+     descendant of main. Opening it marks those three `inert`; if the dialog lived
+     inside one of them it would inert itself, and its own close button would stop
+     taking focus and stop receiving clicks. Keep it here. -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
+  <button class="lightbox-close" type="button" aria-label="Close viewer">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
+  </button>
+  <button class="lightbox-prev" type="button" aria-label="Previous photo">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+  </button>
+  <button class="lightbox-next" type="button" aria-label="Next photo">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+  </button>
+  <figure class="lightbox-figure">
+    <img class="lightbox-img" alt="" width="1200" height="800" decoding="async">
+    <div class="lightbox-meta">
+      <span class="lightbox-caption"></span>
+      <span class="lightbox-count"></span>
+    </div>
+  </figure>
+</div>
+
 <!-- ============================ FOOTER ============================ -->
 <footer class="site-footer">
   <div class="container">
@@ -775,6 +839,6 @@
   <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2.05 22l5.3-1.39a9.87 9.87 0 0 0 4.69 1.19h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.64-1.03-5.13-2.9-7A9.83 9.83 0 0 0 12.04 2Zm0 18.13h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.22-8.24 8.22Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.29Z"/></svg>
 </a>
 
-<script src="assets/js/main.min.js?v=20260723" defer></script>
+<script src="assets/js/main.min.js?v=20260730b" defer></script>
 </body>
 </html>

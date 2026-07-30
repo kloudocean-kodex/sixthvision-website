@@ -3,17 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fdfbf7">
 <meta name="robots" content="noindex">
 <title>Page not found | Sixth Vision</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="stylesheet" href="/assets/css/styles.min.css?v=20260717c">
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-M6TSWTEBM9"></script>
+<link rel="stylesheet" href="/assets/css/styles.min.css?v=20260730b">
+<!-- Google Analytics 4 — same deferred loader as index.html, so gtag.js never
+     competes with first paint on these pages either. -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-M6TSWTEBM9');
+  (function () {
+    var done = false;
+    function loadGA(){
+      if (done) return; done = true;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-M6TSWTEBM9';
+      document.head.appendChild(s);
+    }
+    function schedule(){ ('requestIdleCallback' in window)
+      ? requestIdleCallback(loadGA, { timeout: 3000 }) : setTimeout(loadGA, 1500); }
+    if (document.readyState === 'complete') schedule();
+    else window.addEventListener('load', schedule, { once: true });
+    ['scroll','pointerdown','keydown','touchstart'].forEach(function(e){
+      window.addEventListener(e, loadGA, { once: true, passive: true });
+    });
+  })();
 </script>
 </head>
 <body>

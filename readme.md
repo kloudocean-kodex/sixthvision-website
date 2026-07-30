@@ -58,7 +58,7 @@ Netlify dashboard under "Forms" once deployed; it posts to `/thank-you.html`).
 
 **Editing CSS/JS:** the HTML links `assets/css/styles.min.css` + `assets/js/main.min.js`. Edit the readable
 sources `styles.css` / `main.js`, then run `python C:\Users\gawar\Downloads\sixthvision-final-minify.py`
-and bump the `?v=` version in `index.html` + `thank-you.html`. Current version: **`v=20260717c`**.
+and bump the `?v=` version in `index.html` + `thank-you.html`. Current version: **`v=20260730b`**.
 
 **Latest visual polish (v=…d):** the feature photos (intro interior, showreel, editing before/after,
 virtual staging) now read as *framed gallery prints* — a soft warm radial halo behind each section, a fine
@@ -127,8 +127,10 @@ sixthvision.com.au (correct after cutover).
   had no file, so it runs as a styled text wordmark in the marquee).
 - `assets/video/showreel.mp4` — 63 French Road Greenvale, transcoded 1080p H.264 (~17 MB) from the
   140 MB original (Netlify's limit is 100 MB/file). Loads only when the play button is clicked.
-- `assets/fonts/` — self-hosted: Cormorant Garamond (display), Jost (body). Playfair/Marcellus files
-  remain for the specimen page only; browsers never download unused faces.
+- `assets/fonts/` — self-hosted: Cormorant Garamond (display), Jost (body). The Playfair Display and
+  Marcellus files were deleted on 2026-07-30: Cormorant won the serif trial and sits ahead of both in
+  `--serif`, so neither could ever render. Two metric-matched fallback faces (`Cormorant Fallback`,
+  `Jost Fallback`) are declared via `local()` + `size-adjust` to hold the layout during font swap.
 
 ## Before cutover to sixthvision.com.au
 
