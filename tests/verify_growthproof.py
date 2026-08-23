@@ -37,10 +37,13 @@ require("send_to: DESTINATION" in GP_TY and "const DESTINATION = 'G-M6TSWTEBM9'"
 require('window.setTimeout(() => send(attempt + 1), 100)' in GP_TY, 'Lead-event gtag readiness retry missing')
 
 # First-touch attribution remains immutable and submit-touch is captured separately.
-for field in ['landing_path', 'referrer_path', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'msclkid', 'captured_at']:
-    require(field in GP, f'Missing first-touch attribution field: {field}')
-for field in ['submit_path', 'submit_referrer_path', 'submit_touch_at', 'submit_utm_source', 'submit_utm_medium', 'submit_utm_campaign', 'submit_utm_term', 'submit_utm_content', 'submit_gclid', 'submit_msclkid']:
-    require(field in GP, f'Missing submit-touch attribution field: {field}')
+for field in ['landing_path', 'referrer_path', 'captured_at']:
+    require(field in GP, f'Missing first-touch path/time field: {field}')
+require("const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'msclkid']" in GP, 'Known attribution allow-list changed')
+require("queryValues('')" in GP, 'First-touch campaign extraction missing')
+require("queryValues('submit_')" in GP, 'Submit-touch campaign extraction missing')
+for field in ['submit_path', 'submit_referrer_path', 'submit_touch_at']:
+    require(field in GP, f'Missing submit-touch path/time field: {field}')
 for field in ['attribution_model', 'growthproof_measurement_version', 'lead_id', 'submitted_at']:
     require(field in GP, f'Missing GrowthProof evidence field: {field}')
 require("attribution_model: 'first_and_submit_touch_v2'" in GP, 'Dual-touch attribution model marker missing')
@@ -56,7 +59,6 @@ require('svr_gp_sent_' in GP_TY, 'Duplicate lead-event guard missing')
 require('PENDING_KEYS.forEach' in GP_TY, 'Pending lead cleanup missing')
 
 # Attribution storage is limited to explicit campaign identifiers and safe paths.
-require("const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'msclkid']" in GP, 'Known attribution allow-list changed')
 require('document.referrer' in GP and 'return u.pathname' in GP, 'Referrer must be reduced to path, not stored wholesale')
 require("const ATTR_KEY = 'svr_gp_first_touch_v1'" in GP, 'First-touch continuity key changed unexpectedly')
 
