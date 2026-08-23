@@ -1,0 +1,64 @@
+name: GrowthProof Residential CI
+
+on:
+  push:
+    branches:
+      - growthproof/residential-measurement-v1
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: growthproof-residential-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  verify-and-apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout proof branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply idempotent GrowthProof measurement patch
+        run: python3 scripts/apply_growthproof_measurement.py
+
+      - name: Validate Python sources
+        run: python3 -m py_compile scripts/apply_growthproof_measurement.py tests/verify_growthproof.py
+
+      - name: Validate GrowthProof JavaScript syntax
+        run: |
+          node --check assets/js/growthproof.js
+          node --check assets/js/growthproof-thankyou.js
+
+      - name: Run GrowthProof regression gates
+        run: python3 tests/verify_growthproof.py
+
+      - name: Show exact branch diff
+        run: git diff --check && git status --short
+
+      - name: Commit tested generated changes to proof branch
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html thank-you.html assets/js/growthproof.js assets/js/growthproof-thankyou.js; then
+            echo "No generated source changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html thank-you.html assets/js/growthproof.js assets/js/growthproof-thankyou.js
+          git commit -m "Implement residential GrowthProof lead attribution"
+          git push origin HEAD:growthproof/residential-measurement-v1
