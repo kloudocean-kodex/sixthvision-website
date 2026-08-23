@@ -1,5 +1,7 @@
 from pathlib import Path
 
+# Final-head verification note: this file change intentionally triggers a normal PR CI run
+# after CI has already generated the res-v2 production assets on the proof branch.
 INDEX = Path('index.html').read_text(encoding='utf-8')
 THANK_YOU = Path('thank-you.html').read_text(encoding='utf-8')
 HEADERS = Path('_headers').read_text(encoding='utf-8')
