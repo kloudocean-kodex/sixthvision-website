@@ -2,6 +2,7 @@ from pathlib import Path
 
 INDEX = Path('index.html').read_text(encoding='utf-8')
 THANK_YOU = Path('thank-you.html').read_text(encoding='utf-8')
+HEADERS = Path('_headers').read_text(encoding='utf-8')
 GP = Path('assets/js/growthproof.js').read_text(encoding='utf-8')
 GP_TY = Path('assets/js/growthproof-thankyou.js').read_text(encoding='utf-8')
 
@@ -46,5 +47,9 @@ require('sessionStorage.removeItem(PENDING_KEY)' in GP_TY, 'Pending lead cleanup
 # First-touch storage only records explicit campaign identifiers + safe paths.
 require("const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'msclkid']" in GP, 'Known attribution allow-list changed')
 require('document.referrer' in GP and 'return u.pathname' in GP, 'Referrer must be reduced to path, not stored wholesale')
+
+# Google Tag collection endpoints used by the current GA4 bootstrap must be allowed by CSP.
+require('connect-src' in HEADERS, 'CSP connect-src directive missing')
+require('https://stats.g.doubleclick.net' in HEADERS, 'Google Tag stats.g.doubleclick.net endpoint missing from CSP connect-src')
 
 print('GrowthProof residential regression gates passed')
