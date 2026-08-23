@@ -1,9 +1,9 @@
 (() => {
   'use strict';
 
-  const VERSION = 'res-v1';
+  const VERSION = 'res-v2';
   const ATTR_KEY = 'svr_gp_first_touch_v1';
-  const PENDING_KEY = 'svr_gp_pending_lead_v1';
+  const PENDING_KEY = 'svr_gp_pending_lead_v2';
   const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'msclkid'];
 
   function emit(name, params) {
@@ -26,22 +26,35 @@
     }
   }
 
+  function queryValues(prefix) {
+    const q = new URLSearchParams(window.location.search);
+    const values = {};
+    UTM_KEYS.forEach((key) => { values[prefix + key] = q.get(key) || ''; });
+    return values;
+  }
+
   function loadFirstTouch() {
     try {
       const existing = window.localStorage.getItem(ATTR_KEY);
       if (existing) return JSON.parse(existing);
     } catch (_) {}
 
-    const q = new URLSearchParams(window.location.search);
-    const record = {
+    const record = Object.assign({
       landing_path: window.location.pathname || '/',
       referrer_path: safePath(document.referrer),
       captured_at: new Date().toISOString()
-    };
-    UTM_KEYS.forEach((key) => { record[key] = q.get(key) || ''; });
+    }, queryValues(''));
 
     try { window.localStorage.setItem(ATTR_KEY, JSON.stringify(record)); } catch (_) {}
     return record;
+  }
+
+  function captureSubmitTouch() {
+    return Object.assign({
+      submit_path: window.location.pathname || '/',
+      submit_referrer_path: safePath(document.referrer),
+      submit_touch_at: new Date().toISOString()
+    }, queryValues('submit_'));
   }
 
   function setHidden(form, name, value) {
@@ -105,7 +118,9 @@
   form.addEventListener('submit', () => {
     const leadId = uuid();
     const submittedAt = new Date().toISOString();
-    const fields = Object.assign({}, firstTouch, {
+    const submitTouch = captureSubmitTouch();
+    const fields = Object.assign({}, firstTouch, submitTouch, {
+      attribution_model: 'first_and_submit_touch_v2',
       growthproof_measurement_version: VERSION,
       lead_id: leadId,
       submitted_at: submittedAt
@@ -120,7 +135,8 @@
       window.sessionStorage.setItem(PENDING_KEY, JSON.stringify({
         lead_id: leadId,
         service: service,
-        submitted_at: submittedAt
+        submitted_at: submittedAt,
+        attribution_model: 'first_and_submit_touch_v2'
       }));
     } catch (_) {}
   });
