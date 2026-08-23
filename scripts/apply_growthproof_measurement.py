@@ -1,7 +1,8 @@
+import re
 from pathlib import Path
 
-VERSION = "res-v1"
-CACHE_VERSION = "20260823a"
+VERSION = "res-v2"
+CACHE_VERSION = "20260824b"
 
 INDEX = Path("index.html")
 THANK_YOU = Path("thank-you.html")
@@ -11,13 +12,15 @@ GP_TY_JS = Path("assets/js/growthproof-thankyou.js")
 INDEX_MARKER = '<script src="assets/js/main.min.js?v=20260730b" defer></script>'
 INDEX_TAG = f'<script src="assets/js/growthproof.js?v={CACHE_VERSION}" defer></script>'
 THANK_YOU_TAG = f'<script src="assets/js/growthproof-thankyou.js?v={CACHE_VERSION}" defer></script>'
+INDEX_RE = re.compile(r'<script src="assets/js/growthproof\.js\?v=[^"]+" defer></script>')
+THANK_YOU_RE = re.compile(r'<script src="assets/js/growthproof-thankyou\.js\?v=[^"]+" defer></script>')
 
 GROWTHPROOF_JS = r'''(() => {
   'use strict';
 
-  const VERSION = 'res-v1';
+  const VERSION = 'res-v2';
   const ATTR_KEY = 'svr_gp_first_touch_v1';
-  const PENDING_KEY = 'svr_gp_pending_lead_v1';
+  const PENDING_KEY = 'svr_gp_pending_lead_v2';
   const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'msclkid'];
 
   function emit(name, params) {
@@ -40,22 +43,35 @@ GROWTHPROOF_JS = r'''(() => {
     }
   }
 
+  function queryValues(prefix) {
+    const q = new URLSearchParams(window.location.search);
+    const values = {};
+    UTM_KEYS.forEach((key) => { values[prefix + key] = q.get(key) || ''; });
+    return values;
+  }
+
   function loadFirstTouch() {
     try {
       const existing = window.localStorage.getItem(ATTR_KEY);
       if (existing) return JSON.parse(existing);
     } catch (_) {}
 
-    const q = new URLSearchParams(window.location.search);
-    const record = {
+    const record = Object.assign({
       landing_path: window.location.pathname || '/',
       referrer_path: safePath(document.referrer),
       captured_at: new Date().toISOString()
-    };
-    UTM_KEYS.forEach((key) => { record[key] = q.get(key) || ''; });
+    }, queryValues(''));
 
     try { window.localStorage.setItem(ATTR_KEY, JSON.stringify(record)); } catch (_) {}
     return record;
+  }
+
+  function captureSubmitTouch() {
+    return Object.assign({
+      submit_path: window.location.pathname || '/',
+      submit_referrer_path: safePath(document.referrer),
+      submit_touch_at: new Date().toISOString()
+    }, queryValues('submit_'));
   }
 
   function setHidden(form, name, value) {
@@ -119,7 +135,9 @@ GROWTHPROOF_JS = r'''(() => {
   form.addEventListener('submit', () => {
     const leadId = uuid();
     const submittedAt = new Date().toISOString();
-    const fields = Object.assign({}, firstTouch, {
+    const submitTouch = captureSubmitTouch();
+    const fields = Object.assign({}, firstTouch, submitTouch, {
+      attribution_model: 'first_and_submit_touch_v2',
       growthproof_measurement_version: VERSION,
       lead_id: leadId,
       submitted_at: submittedAt
@@ -134,7 +152,8 @@ GROWTHPROOF_JS = r'''(() => {
       window.sessionStorage.setItem(PENDING_KEY, JSON.stringify({
         lead_id: leadId,
         service: service,
-        submitted_at: submittedAt
+        submitted_at: submittedAt,
+        attribution_model: 'first_and_submit_touch_v2'
       }));
     } catch (_) {}
   });
@@ -144,43 +163,67 @@ GROWTHPROOF_JS = r'''(() => {
 GROWTHPROOF_THANK_YOU_JS = r'''(() => {
   'use strict';
 
-  const VERSION = 'res-v1';
-  const PENDING_KEY = 'svr_gp_pending_lead_v1';
+  const VERSION = 'res-v2';
+  const DESTINATION = 'G-M6TSWTEBM9';
+  const PENDING_KEYS = ['svr_gp_pending_lead_v2', 'svr_gp_pending_lead_v1'];
 
-  let pending;
-  try { pending = JSON.parse(window.sessionStorage.getItem(PENDING_KEY) || 'null'); } catch (_) { pending = null; }
+  let pending = null;
+  let pendingKey = '';
+  for (const key of PENDING_KEYS) {
+    try {
+      const candidate = JSON.parse(window.sessionStorage.getItem(key) || 'null');
+      if (candidate && candidate.lead_id) {
+        pending = candidate;
+        pendingKey = key;
+        break;
+      }
+    } catch (_) {}
+  }
   if (!pending || !pending.lead_id) return;
 
   const sentKey = 'svr_gp_sent_' + pending.lead_id;
   try { if (window.sessionStorage.getItem(sentKey)) return; } catch (_) {}
 
-  if (typeof window.gtag !== 'function') return;
-  window.gtag('event', 'generate_lead', {
-    measurement_version: VERSION,
-    lead_id: pending.lead_id,
-    lead_type: 'residential_enquiry',
-    service: pending.service || ''
-  });
+  function finalize() {
+    try {
+      window.sessionStorage.setItem(sentKey, '1');
+      if (pendingKey) window.sessionStorage.removeItem(pendingKey);
+      PENDING_KEYS.forEach((key) => window.sessionStorage.removeItem(key));
+    } catch (_) {}
+  }
 
-  try {
-    window.sessionStorage.setItem(sentKey, '1');
-    window.sessionStorage.removeItem(PENDING_KEY);
-  } catch (_) {}
+  function send(attempt) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'generate_lead', {
+        send_to: DESTINATION,
+        measurement_version: VERSION,
+        lead_id: pending.lead_id,
+        lead_type: 'residential_enquiry',
+        service: pending.service || '',
+        attribution_model: pending.attribution_model || 'legacy_first_touch_v1'
+      });
+      finalize();
+      return;
+    }
+    if (attempt < 50) window.setTimeout(() => send(attempt + 1), 100);
+  }
+
+  send(0);
 })();
 '''
 
 
 def patch_index(text: str) -> str:
-    if INDEX_TAG in text:
-        return text
+    if INDEX_RE.search(text):
+        return INDEX_RE.sub(INDEX_TAG, text, count=1)
     if INDEX_MARKER not in text:
         raise SystemExit(f"Expected index marker missing: {INDEX_MARKER}")
     return text.replace(INDEX_MARKER, INDEX_MARKER + "\n" + INDEX_TAG, 1)
 
 
 def patch_thank_you(text: str) -> str:
-    if THANK_YOU_TAG in text:
-        return text
+    if THANK_YOU_RE.search(text):
+        return THANK_YOU_RE.sub(THANK_YOU_TAG, text, count=1)
     marker = "</body>"
     if marker not in text:
         raise SystemExit("Expected </body> marker missing from thank-you.html")
