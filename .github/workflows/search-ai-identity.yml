@@ -1,0 +1,74 @@
+name: Search AI Identity Residential
+
+on:
+  push:
+    branches:
+      - growthproof/search-ai-identity-20260830
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: search-ai-identity-residential
+  cancel-in-progress: false
+
+jobs:
+  verify-and-apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout proof branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Re-apply existing GrowthProof patch
+        run: python3 scripts/apply_growthproof_measurement.py
+
+      - name: Apply search, AI and legal identity patch
+        run: python3 scripts/apply_search_ai_identity.py
+
+      - name: Validate Python sources
+        run: python3 -m py_compile scripts/apply_growthproof_measurement.py scripts/apply_search_ai_identity.py tests/verify_growthproof.py
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check assets/js/main.js
+          node --check assets/js/growthproof.js
+          node --check assets/js/growthproof-thankyou.js
+
+      - name: Run existing GrowthProof regression gates
+        run: python3 tests/verify_growthproof.py
+
+      - name: Search/AI identity assertions
+        run: |
+          grep -F 'SIXTH VISION PTY LTD' index.html
+          grep -F 'ABN 92 625 744 630' index.html
+          grep -F '"iso6523Code": "0151:92625744630"' index.html
+          grep -F '<span data-count="50000">50,000</span>' index.html
+          grep -F 'https://sixthvisioncommercial.com.au/' index.html
+          grep -F 'User-agent: *' robots.txt
+          grep -F 'Allow: /' robots.txt
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Commit tested generated page change
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html thank-you.html assets/js/growthproof.js assets/js/growthproof-thankyou.js; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html thank-you.html assets/js/growthproof.js assets/js/growthproof-thankyou.js
+          git commit -m "Apply residential legal identity and AI-search hygiene"
+          git push origin HEAD:${{ github.ref_name }}
