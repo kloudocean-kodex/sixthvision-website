@@ -82,10 +82,16 @@ class PageParser(HTMLParser):
 
 def sitemap_urls(sitemap: Path) -> list[str]:
     root = ET.parse(sitemap).getroot()
-    urls = []
-    for elem in root.iter():
-        if elem.tag.endswith("loc") and elem.text:
-            urls.append(elem.text.strip())
+    urls: list[str] = []
+    # Only direct <url><loc> children are page URLs. Image/video/news sitemap
+    # extensions also contain elements named *:loc and must never be audited as HTML.
+    for url_node in root:
+        if not url_node.tag.endswith("url"):
+            continue
+        for child in url_node:
+            if child.tag.endswith("loc") and child.text:
+                urls.append(child.text.strip())
+                break
     return urls
 
 
@@ -161,9 +167,8 @@ def main() -> int:
             failures.append(f"{url}: missing/too-short meta description")
         if page.h1_count != 1:
             failures.append(f"{url}: expected exactly one H1, found {page.h1_count}")
-        expected_canonical = url
-        if page.canonical != expected_canonical:
-            failures.append(f"{url}: canonical is {page.canonical!r}, expected {expected_canonical!r}")
+        if page.canonical != url:
+            failures.append(f"{url}: canonical is {page.canonical!r}, expected {url!r}")
         if page.robots and "noindex" in page.robots.lower():
             failures.append(f"{url}: sitemap page is marked noindex")
 
@@ -200,19 +205,13 @@ def main() -> int:
             if f"{target.scheme}://{target.netloc}" != host:
                 continue
             target_url = f"{host}{target.path or '/'}"
-            # Normalize home URL to sitemap representation.
-            if target_url == host:
-                target_url = host + "/"
             target_file = url_to_file(root, target_url)
             if not target_file.exists():
                 failures.append(f"{source_url}: broken internal link {href} -> {target_file.relative_to(root)}")
                 continue
             if target.fragment:
                 target_page = parsed.get(target_url)
-                if target_page is None:
-                    target_parser = parse_page(target_file)
-                else:
-                    target_parser = target_page[1]
+                target_parser = target_page[1] if target_page else parse_page(target_file)
                 if target.fragment not in target_parser.ids:
                     failures.append(f"{source_url}: missing fragment target #{target.fragment} in {target_url}")
 
