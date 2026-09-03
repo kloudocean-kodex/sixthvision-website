@@ -1,6 +1,6 @@
 /* Sixth Vision — interactions. Quiet, physics-eased, reduced-motion aware.
-   Rev 2026-07-30. Scroll work is rAF-batched and self-retiring; modal surfaces
-   trap focus. Nothing below reads layout inside a raw scroll handler. */
+   Rev 2026-09-03. Scroll work is rAF-batched and self-retiring; modal surfaces
+   trap focus. Business facts remain stable in the DOM for search/AI extraction. */
 (function () {
   'use strict';
 
@@ -79,46 +79,33 @@
     else if (wide.addListener) wide.addListener(onWide);
   }
 
-  /* ---- Scroll reveal + stat count-up ----
-     IntersectionObserver does the real work. The rAF fallback below runs only
-     where IO is unavailable, and retires itself the moment the last element has
-     been revealed — the previous version measured every .reveal on every scroll
-     event for the life of the page. */
+  /* ---- Scroll reveal + semantic stat integrity ---------------------------
+     The original count-up animation temporarily replaced real business facts
+     such as 50,000 with 0 while the animation ran. Rendered-page extractors can
+     snapshot during that interval, so search/AI systems were receiving facts
+     that contradicted the static HTML. The final facts now remain in the DOM at
+     all times. Motion belongs to the containing reveal, not to the meaning. */
   var revealEls = [].slice.call(document.querySelectorAll('.reveal'));
   var counters = [].slice.call(document.querySelectorAll('[data-count]'));
 
   function fmt(n) { try { return n.toLocaleString('en-AU'); } catch (e) { return String(n); } }
   function revealNow(el) { el.classList.add('is-in'); }
-  function runCounter(el) {
-    if (el.getAttribute('data-counted')) return;
+
+  counters.forEach(function (el) {
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    if (!isNaN(target)) el.textContent = fmt(target);
     el.setAttribute('data-counted', '1');
-    var target = parseInt(el.getAttribute('data-count'), 10) || 0;
-    if (reduceMotion) { el.textContent = fmt(target); return; }
-    var start = null, dur = 1800;
-    function step(ts) {
-      if (!start) start = ts;
-      var p = Math.min((ts - start) / dur, 1);
-      el.textContent = fmt(Math.floor((1 - Math.pow(1 - p, 3)) * target));
-      if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(target);
-    }
-    requestAnimationFrame(step);
-  }
+  });
 
   if (reduceMotion) {
     revealEls.forEach(revealNow);
-    counters.forEach(function (el) { el.textContent = fmt(parseInt(el.getAttribute('data-count'), 10) || 0); });
   } else if ('IntersectionObserver' in window) {
     var revealIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { if (e.isIntersecting) { revealNow(e.target); revealIO.unobserve(e.target); } });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
     revealEls.forEach(function (el) { revealIO.observe(el); });
-
-    var countIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) { runCounter(e.target); countIO.unobserve(e.target); } });
-    }, { threshold: 0.5 });
-    counters.forEach(function (el) { countIO.observe(el); });
   } else {
-    var pendingR = revealEls.slice(), pendingC = counters.slice();
+    var pendingR = revealEls.slice();
     addJob(function () {
       var vh = window.innerHeight || document.documentElement.clientHeight;
       pendingR = pendingR.filter(function (el) {
@@ -126,12 +113,7 @@
         if (r.top < vh - 40 && r.bottom > 0) { revealNow(el); return false; }
         return true;
       });
-      pendingC = pendingC.filter(function (el) {
-        var r = el.getBoundingClientRect();
-        if (r.top < vh && r.bottom > 0) { runCounter(el); return false; }
-        return true;
-      });
-      return !pendingR.length && !pendingC.length;   /* retire when done */
+      return !pendingR.length;   /* retire when done */
     });
     window.addEventListener('load', request, { passive: true, once: true });
   }
