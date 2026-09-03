@@ -1,0 +1,30 @@
+{
+  "brand": "Sixth Vision",
+  "legal_name": "SIXTH VISION PTY LTD",
+  "abn_display": "92 625 744 630",
+  "iso6523_code": "0151:92625744630",
+  "canonical_url": "https://sixthvision.com.au/",
+  "business_id": "https://sixthvision.com.au/#business",
+  "telephone_e164": "+61474126276",
+  "telephone_display": "0474 126 276",
+  "email": "sixthvision.mel@gmail.com",
+  "address": {
+    "locality": "Melbourne",
+    "region": "VIC",
+    "country": "AU"
+  },
+  "area_served": {
+    "type": "City",
+    "name": "Melbourne"
+  },
+  "required_same_as": [
+    "https://sixthvisioncommercial.com.au/",
+    "https://www.instagram.com/sixthvision.mel",
+    "https://www.facebook.com/sixthvisionmel/"
+  ],
+  "allow_precise_geo": false,
+  "forbidden_legacy_literals": [
+    "-37.745313",
+    "144.99953"
+  ]
+}
