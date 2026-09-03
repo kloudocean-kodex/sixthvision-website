@@ -27,7 +27,7 @@ jobs:
           python-version: '3.12'
 
       - name: Compile quality checks
-        run: python3 -m py_compile tests/verify_growthproof.py tests/verify_search_quality.py
+        run: python3 -m py_compile tests/verify_growthproof.py tests/verify_search_quality.py scripts/summarize_lighthouse.py
 
       - name: Preserve GrowthProof attribution contract
         run: python3 tests/verify_growthproof.py
@@ -64,6 +64,9 @@ jobs:
 
       - name: Run Lighthouse CI
         run: npx -y @lhci/cli@0.15.x autorun --config=./lighthouserc.json
+
+      - name: Record GrowthProof Lighthouse medians
+        run: python3 scripts/summarize_lighthouse.py
 
       - name: Upload Lighthouse evidence
         if: always()
