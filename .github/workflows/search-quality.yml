@@ -1,0 +1,75 @@
+name: GrowthProof Search Quality
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: search-quality-residential-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  search-integrity:
+    name: Search integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile quality checks
+        run: python3 -m py_compile tests/verify_growthproof.py tests/verify_search_quality.py
+
+      - name: Preserve GrowthProof attribution contract
+        run: python3 tests/verify_growthproof.py
+
+      - name: Verify indexability, metadata, schema and internal links
+        run: python3 tests/verify_search_quality.py --root . --host https://sixthvision.com.au
+
+      - name: Diff hygiene
+        run: git diff --check
+
+  lighthouse:
+    name: Lighthouse regression gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Start isolated static server
+        run: |
+          python3 -m http.server 8080 --bind 127.0.0.1 --directory . >/tmp/sixthvision-http.log 2>&1 &
+          echo $! > /tmp/sixthvision-http.pid
+          for i in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:8080/ >/dev/null; then exit 0; fi
+            sleep 0.5
+          done
+          cat /tmp/sixthvision-http.log
+          exit 1
+
+      - name: Run Lighthouse CI
+        run: npx -y @lhci/cli@0.15.x autorun --config=./lighthouserc.json
+
+      - name: Upload Lighthouse evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: residential-lighthouse-${{ github.sha }}
+          path: .lighthouseci/reports
+          if-no-files-found: warn
+          retention-days: 30
