@@ -1,0 +1,62 @@
+name: Apply Residential Entity Truth
+
+on:
+  push:
+    branches:
+      - growthproof/residential-entity-truth-20260903
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: residential-entity-truth-apply
+  cancel-in-progress: false
+
+jobs:
+  verify-and-apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout proof branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply idempotent search, AI and entity truth patch
+        run: python3 scripts/apply_search_ai_identity.py
+
+      - name: Validate source and existing GrowthProof contract
+        run: |
+          python3 -m py_compile scripts/apply_search_ai_identity.py tests/verify_growthproof.py tests/verify_search_quality.py
+          python3 tests/verify_growthproof.py
+          python3 tests/verify_search_quality.py --root . --host https://sixthvision.com.au
+
+      - name: Prove retired precise geo is absent
+        run: |
+          ! grep -F -- '-37.745313' index.html
+          ! grep -F -- '144.99953' index.html
+          grep -F '"addressLocality": "Melbourne"' index.html
+          grep -F '"areaServed": { "@type": "City", "name": "Melbourne" }' index.html
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Commit generated entity correction to proof branch
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No generated page change to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Remove legacy Residential geo from entity output"
+          git push origin HEAD:${{ github.ref_name }}
