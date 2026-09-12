@@ -7,6 +7,10 @@ ABN_DISPLAY = "92 625 744 630"
 ABN_COMPACT = "92625744630"
 LEGAL_NAME = "SIXTH VISION PTY LTD"
 ISO6523_ABN = f"0151:{ABN_COMPACT}"
+LEGACY_GEO = (
+    '      "geo": { "@type": "GeoCoordinates", "latitude": "-37.745313", '
+    '"longitude": "144.99953" },\n'
+)
 
 
 def replace_once(text: str, old: str, new: str, label: str) -> str:
@@ -41,6 +45,31 @@ def patch_business_entity(text: str) -> str:
         '      ],'
     )
     text = replace_once(text, old_same_as, new_same_as, "residential cross-domain identity")
+    return text
+
+
+def patch_service_area_location(text: str) -> str:
+    """Remove the retired precise Preston/Bell pin from service-area schema.
+
+    Sixth Vision publishes Melbourne as the service area and does not present
+    this legacy coordinate as a current customer-facing location. Keeping an
+    obsolete precise geo point would contradict the visible entity and reinforce
+    stale third-party Preston citations. The generic Melbourne PostalAddress and
+    areaServed fields remain intact.
+    """
+    if LEGACY_GEO in text:
+        text = text.replace(LEGACY_GEO, "", 1)
+    if "-37.745313" in text or "144.99953" in text:
+        raise SystemExit("legacy Preston/Bell geo coordinate remains in Residential output")
+    required = [
+        '"addressLocality": "Melbourne"',
+        '"addressRegion": "VIC"',
+        '"addressCountry": "AU"',
+        '"areaServed": { "@type": "City", "name": "Melbourne" }',
+    ]
+    missing = [item for item in required if item not in text]
+    if missing:
+        raise SystemExit("service-area identity incomplete; missing: " + ", ".join(missing))
     return text
 
 
@@ -96,15 +125,20 @@ def validate(text: str) -> None:
         '<span data-count="60">60</span>',
         '<span data-count="400">400</span>',
         '<span data-count="500">500</span>',
+        '"addressLocality": "Melbourne"',
+        '"areaServed": { "@type": "City", "name": "Melbourne" }',
     ]
     missing = [item for item in required if item not in text]
     if missing:
         raise SystemExit("Validation failed; missing: " + ", ".join(missing))
+    if "-37.745313" in text or "144.99953" in text:
+        raise SystemExit("Validation failed; retired Preston/Bell geo coordinate still present")
     validate_json_ld(text)
 
 
 def patch(text: str) -> str:
     text = patch_business_entity(text)
+    text = patch_service_area_location(text)
     text = patch_static_evidence(text)
     text = patch_footer(text)
     validate(text)
