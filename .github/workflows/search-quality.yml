@@ -27,10 +27,19 @@ jobs:
           python-version: '3.12'
 
       - name: Compile quality checks
-        run: python3 -m py_compile tests/verify_growthproof.py tests/verify_search_quality.py scripts/summarize_lighthouse.py
+        run: python3 -m py_compile tests/verify_growthproof.py tests/verify_search_quality.py tests/verify_entity_truth.py scripts/summarize_lighthouse.py scripts/apply_search_ai_identity.py
 
       - name: Preserve GrowthProof attribution contract
         run: python3 tests/verify_growthproof.py
+
+      - name: Verify approved public entity truth
+        run: python3 tests/verify_entity_truth.py
+
+      - name: Verify entity generator is idempotent
+        run: |
+          cp index.html /tmp/index.before.html
+          python3 scripts/apply_search_ai_identity.py
+          cmp -s /tmp/index.before.html index.html
 
       - name: Verify indexability, metadata, schema and internal links
         run: python3 tests/verify_search_quality.py --root . --host https://sixthvision.com.au
