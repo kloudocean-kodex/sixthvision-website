@@ -1,0 +1,71 @@
+name: IndexNow Discovery
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for production deployment
+        shell: bash
+        env:
+          HOST: sixthvision.com.au
+          INDEXNOW_KEY: 2f6f1ac03fcec7d7b3cdecf75031a9de
+        run: |
+          set -euo pipefail
+          key_url="https://$HOST/$INDEXNOW_KEY.txt"
+          for attempt in {1..18}; do
+            body="$(curl -fsS "$key_url" 2>/dev/null || true)"
+            if [ "$body" = "$INDEXNOW_KEY" ]; then
+              echo "Production key verified."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "IndexNow key was not visible on production after retries."
+          exit 1
+
+      - name: Build IndexNow payload from canonical sitemap
+        shell: bash
+        env:
+          HOST: sixthvision.com.au
+          INDEXNOW_KEY: 2f6f1ac03fcec7d7b3cdecf75031a9de
+          SITEMAP_FILE: sitemap.xml
+        run: |
+          python3 - <<'PY'
+          import json, os, xml.etree.ElementTree as ET
+          sitemap = os.environ["SITEMAP_FILE"]
+          host = os.environ["HOST"]
+          key = os.environ["INDEXNOW_KEY"]
+          root = ET.parse(sitemap).getroot()
+          ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+          urls = [n.text.strip() for n in root.findall(".//sm:loc", ns) if n.text and n.text.strip()]
+          if not urls:
+              raise SystemExit("No canonical URLs found in sitemap")
+          payload = {
+              "host": host,
+              "key": key,
+              "keyLocation": f"https://{host}/{key}.txt",
+              "urlList": urls,
+          }
+          with open("indexnow-payload.json", "w", encoding="utf-8") as f:
+              json.dump(payload, f)
+          print(f"Prepared {len(urls)} canonical URL(s) for IndexNow")
+          PY
+
+      - name: Notify IndexNow
+        shell: bash
+        run: |
+          curl --fail-with-body --silent --show-error \
+            -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            --data-binary @indexnow-payload.json
