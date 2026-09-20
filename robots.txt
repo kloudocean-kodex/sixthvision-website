@@ -11,4 +11,15 @@ Allow: /
 User-agent: OAI-SearchBot
 Allow: /
 
+# Perplexity live/search retrieval. PerplexityBot builds its search index; Perplexity-User supports user-requested retrieval.
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Claude live user retrieval. ClaudeBot (training crawler) is intentionally not given a separate override here.
+User-agent: Claude-User
+Allow: /
+
 Sitemap: https://sixthvision.com.au/sitemap.xml
