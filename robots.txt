@@ -7,4 +7,8 @@ Allow: /
 # two directives cancel each other out. Letting Google fetch and obey the
 # noindex is the combination that actually keeps them out of the index.
 
+# ChatGPT Search discovery — OAI-SearchBot is the crawler OpenAI uses for search inclusion.
+User-agent: OAI-SearchBot
+Allow: /
+
 Sitemap: https://sixthvision.com.au/sitemap.xml
