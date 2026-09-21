@@ -27,6 +27,29 @@ jobs:
         run: |
           set -euo pipefail
 
+          check_absent() {
+            local url="$1"
+            local forbidden="$2"
+            local body
+            local code
+
+            for attempt in {1..12}; do
+              body="$(mktemp)"
+              code="$(curl -L --connect-timeout 10 --max-time 25 -sS -o "$body" -w '%{http_code}' "$url" || true)"
+              if [[ "$code" == "200" ]] && ! grep -Fqi "$forbidden" "$body"; then
+                echo "PASS $url -> forbidden marker absent: $forbidden"
+                rm -f "$body"
+                return 0
+              fi
+              echo "Attempt $attempt found stale/forbidden marker or bad HTTP for $url; retrying..."
+              rm -f "$body"
+              sleep 15
+            done
+
+            echo "::error::Forbidden/stale marker remains on production: $forbidden"
+            return 1
+          }
+
           check_page() {
             local url="$1"
             local expect="$2"
@@ -57,3 +80,8 @@ jobs:
           check_page "https://sixthvision.com.au/real-estate-photography-preparation-checklist/" "Real Estate Photography Preparation Checklist Melbourne"
           check_page "https://sixthvision.com.au/sitemap.xml" "real-estate-videography-melbourne"
           check_page "https://sixthvision.com.au/thank-you.html" "<meta name=\"robots\" content=\"noindex\""
+
+          # Evidence hygiene: unsupported legacy statistics were removed from
+          # source and are now forbidden on the live custom-domain edge too.
+          check_absent "https://sixthvision.com.au/" "118% more online views"
+          check_absent "https://sixthvision.com.au/" "61% more buyer inspections"
