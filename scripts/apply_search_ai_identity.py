@@ -34,8 +34,7 @@ def patch_business_entity(text: str) -> str:
     old_same_as = (
         '      "sameAs": [\n'
         '        "https://www.instagram.com/sixthvision.mel",\n'
-        '        "https://www.facebook.com/sixthvisionmel/",\n'
-        '        "https://www.youtube.com/@sixthvision86"\n'
+        '        "https://www.facebook.com/sixthvisionmel/"\n'
         '      ],'
     )
     new_same_as = (
@@ -43,7 +42,8 @@ def patch_business_entity(text: str) -> str:
         '        "https://maps.app.goo.gl/3yeAfiN18e23m7tG6?g_st=ac",\n'
         '        "https://sixthvisioncommercial.com.au/",\n'
         '        "https://www.instagram.com/sixthvision.mel",\n'
-        '        "https://www.facebook.com/sixthvisionmel/"\n'
+        '        "https://www.facebook.com/sixthvisionmel/",\n'
+        '        "https://www.youtube.com/@sixthvision86"\n'
         '      ],'
     )
     text = replace_once(text, old_same_as, new_same_as, "residential cross-domain identity")
