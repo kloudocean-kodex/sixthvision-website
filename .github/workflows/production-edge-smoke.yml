@@ -1,0 +1,59 @@
+name: Production Edge Smoke
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-edge-smoke-residential-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-production-edge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Wait for Cloudflare Pages propagation
+        run: sleep 60
+
+      - name: Verify Residential production routes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          check_page() {
+            local url="$1"
+            local expect="$2"
+            local body
+            local code
+
+            for attempt in {1..12}; do
+              body="$(mktemp)"
+              code="$(curl -L --connect-timeout 10 --max-time 25 -sS -o "$body" -w '%{http_code}' "$url" || true)"
+              if [[ "$code" == "200" ]] && grep -Fqi "$expect" "$body"; then
+                echo "PASS $url -> HTTP $code with expected marker: $expect"
+                rm -f "$body"
+                return 0
+              fi
+              echo "Attempt $attempt failed for $url (HTTP ${code:-curl-error}); retrying..."
+              rm -f "$body"
+              sleep 15
+            done
+
+            echo "::error::Production route failed after retries: $url"
+            return 1
+          }
+
+          check_page "https://sixthvision.com.au/" "Real Estate Photography"
+          check_page "https://sixthvision.com.au/real-estate-videography-melbourne/" "Real Estate Videography Melbourne"
+          check_page "https://sixthvision.com.au/real-estate-photography-pricing-melbourne/" "Real Estate Photography Pricing Melbourne"
+          check_page "https://sixthvision.com.au/melbourne-service-areas/" "Real Estate Photography Across Melbourne"
+          check_page "https://sixthvision.com.au/real-estate-photography-preparation-checklist/" "Real Estate Photography Preparation Checklist Melbourne"
+          check_page "https://sixthvision.com.au/sitemap.xml" "real-estate-videography-melbourne"
+          check_page "https://sixthvision.com.au/thank-you.html" "<meta name=\"robots\" content=\"noindex\""
