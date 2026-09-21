@@ -88,7 +88,7 @@
     if (href.startsWith('tel:')) emit('phone_click', params);
     else if (href.startsWith('mailto:')) emit('email_click', params);
     else if (/^https:\/\/(?:www\.)?wa\.me\//i.test(href)) emit('whatsapp_click', params);
-    else if (anchor.hasAttribute('data-commercial-handoff') || /sixthvisioncommercial\\.com\\.au/i.test(href)) {
+    else if (anchor.hasAttribute('data-commercial-handoff') || /sixthvisioncommercial\.com\.au/i.test(href)) {
       emit('commercial_handoff', Object.assign(params, { destination: 'sixthvisioncommercial.com.au' }));
     }
     else if (href === '#contact' && /book/i.test(anchor.textContent || '')) emit('book_shoot_click', params);
