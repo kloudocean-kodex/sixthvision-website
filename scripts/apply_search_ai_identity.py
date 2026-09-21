@@ -34,7 +34,8 @@ def patch_business_entity(text: str) -> str:
     old_same_as = (
         '      "sameAs": [\n'
         '        "https://www.instagram.com/sixthvision.mel",\n'
-        '        "https://www.facebook.com/sixthvisionmel/"\n'
+        '        "https://www.facebook.com/sixthvisionmel/",\n'
+        '        "https://www.youtube.com/@sixthvision86"\n'
         '      ],'
     )
     new_same_as = (
@@ -122,6 +123,7 @@ def validate(text: str) -> None:
         f'"iso6523Code": "{ISO6523_ABN}"',
         "https://maps.app.goo.gl/3yeAfiN18e23m7tG6?g_st=ac",
         "https://sixthvisioncommercial.com.au/",
+        "https://www.youtube.com/@sixthvision86",
         f"ABN {ABN_DISPLAY}",
         '<span data-count="50000">50,000</span>',
         '<span data-count="60">60</span>',
