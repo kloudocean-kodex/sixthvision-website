@@ -2,7 +2,7 @@
 
 Purpose: keep public claims, entity facts, Search/AI structured data and GrowthProof reporting tied to evidence. This file is internal documentation and must not be used to invent or strengthen public claims without proof.
 
-Last reviewed: 2026-08-30
+Last reviewed: 2026-09-21
 
 ## Verified legal/entity facts
 
@@ -33,16 +33,16 @@ These may be true, but they should remain tagged as first-party until supporting
 
 Recommended evidence: booking-system exports, invoice/job counts, client list snapshots, package/pricing approval from owner, and dated guarantee policy.
 
-## Third-party/statistical marketing claims requiring stronger provenance
+## Retired unsupported marketing statistics
 
-The homepage currently presents:
+The former homepage claims:
 
 - **118% more online views with professional photos**
 - **61% more buyer inspections**
 
-Research on 2026-08-30 found the 118% figure repeatedly traced through secondary marketing articles to older US vendor/industry claims (including IMOTO/VHT-style promotional studies), not an Australian Sixth Vision dataset. The exact **61% more buyer inspections** phrasing was not substantiated by the research; similar web claims commonly refer to *views*, not inspections.
+were removed on 2026-09-21 because a defensible primary Australian source was not archived. Their visual slots now use non-numeric benefit copy instead. Search-quality CI blocks these exact claims from returning to indexed HTML, and the production-edge smoke test also verifies that neither phrase is served by the live custom domain.
 
-Status: **do not strengthen, schema-mark or reuse these figures in new content until a primary source is archived.** Prefer replacing them in a future content pass with first-party Sixth Vision proof or a properly cited Australian source.
+Status: **retired and guarded**. Do not reintroduce, schema-mark or reuse the figures unless a credible primary source is archived and the wording is verified against that source.
 
 ## Local entity / GBP caution
 
