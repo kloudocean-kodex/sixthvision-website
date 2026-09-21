@@ -36,6 +36,7 @@ require('generate_lead' not in GP, 'generate_lead must not fire before Web3Forms
 require('data-commercial-handoff' in INDEX, 'Commercial handoff marker missing from Residential navigation')
 require('utm_campaign=residential_commercial_handoff' in INDEX, 'Commercial handoff UTM attribution missing')
 require("destination: 'sixthvisioncommercial.com.au'" in GP, 'Commercial handoff destination marker missing')
+require(r"/sixthvisioncommercial\.com\.au/i" in GP, 'Commercial handoff domain matcher malformed')
 require("gtag('event', 'generate_lead'" in GP_TY, 'generate_lead missing from successful thank-you flow')
 require("lead_type: 'residential_enquiry'" in GP_TY, 'Residential lead type missing')
 require("send_to: DESTINATION" in GP_TY and "const DESTINATION = 'G-M6TSWTEBM9'" in GP_TY, 'Lead event is not pinned to the Residential GA4 destination')
