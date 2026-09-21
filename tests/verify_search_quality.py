@@ -13,6 +13,11 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
+UNSUPPORTED_MARKETING_STATS = (
+    "118% more online views",
+    "61% more buyer inspections",
+)
+
 
 class PageParser(HTMLParser):
     def __init__(self) -> None:
@@ -214,6 +219,12 @@ def main() -> int:
                 target_parser = target_page[1] if target_page else parse_page(target_file)
                 if target.fragment not in target_parser.ids:
                     failures.append(f"{source_url}: missing fragment target #{target.fragment} in {target_url}")
+
+    for html_path in root.rglob("*.html"):
+        text = html_path.read_text(encoding="utf-8", errors="ignore").lower()
+        for claim in UNSUPPORTED_MARKETING_STATS:
+            if claim.lower() in text:
+                failures.append(f"Unsupported legacy marketing statistic remains in {html_path.relative_to(root)}: {claim}")
 
     print(f"Search quality audit: {len(parsed)} indexed page(s), {len(warnings)} warning(s), {len(failures)} failure(s)")
     for item in warnings:
