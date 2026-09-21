@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 VERSION = "res-v2"
-CACHE_VERSION = "20260824b"
+CACHE_VERSION = "20260921a"
 
 INDEX = Path("index.html")
 THANK_YOU = Path("thank-you.html")
