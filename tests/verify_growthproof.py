@@ -23,16 +23,19 @@ require('0199e0dd-f927-4e59-be72-0d81767878f0' in INDEX, 'Web3Forms access key c
 require('https://sixthvision.com.au/thank-you.html' in INDEX, 'Web3Forms success redirect changed/missing')
 
 # GrowthProof scripts must be wired once with the current immutable cache version.
-require(INDEX.count('assets/js/growthproof.js?v=20260824b') == 1, 'GrowthProof index v2 script missing/duplicated')
-require(THANK_YOU.count('assets/js/growthproof-thankyou.js?v=20260824b') == 1, 'GrowthProof thank-you v2 script missing/duplicated')
+require(INDEX.count('assets/js/growthproof.js?v=20260921a') == 1, 'GrowthProof index v2 script missing/duplicated')
+require(THANK_YOU.count('assets/js/growthproof-thankyou.js?v=20260921a') == 1, 'GrowthProof thank-you v2 script missing/duplicated')
 require('growthproof.js?v=20260823a' not in INDEX, 'Stale GrowthProof index cache version remains')
 require('growthproof-thankyou.js?v=20260823a' not in THANK_YOU, 'Stale GrowthProof thank-you cache version remains')
 require("const VERSION = 'res-v2'" in GP and "const VERSION = 'res-v2'" in GP_TY, 'Residential measurement version is not res-v2')
 
 # Expected funnel/intent telemetry.
-for event in ['phone_click', 'email_click', 'whatsapp_click', 'book_shoot_click', 'package_view', 'form_start']:
+for event in ['phone_click', 'email_click', 'whatsapp_click', 'commercial_handoff', 'book_shoot_click', 'package_view', 'form_start']:
     require(event in GP, f'Missing event: {event}')
 require('generate_lead' not in GP, 'generate_lead must not fire before Web3Forms success redirect')
+require('data-commercial-handoff' in INDEX, 'Commercial handoff marker missing from Residential navigation')
+require('utm_campaign=residential_commercial_handoff' in INDEX, 'Commercial handoff UTM attribution missing')
+require("destination: 'sixthvisioncommercial.com.au'" in GP, 'Commercial handoff destination marker missing')
 require("gtag('event', 'generate_lead'" in GP_TY, 'generate_lead missing from successful thank-you flow')
 require("lead_type: 'residential_enquiry'" in GP_TY, 'Residential lead type missing')
 require("send_to: DESTINATION" in GP_TY and "const DESTINATION = 'G-M6TSWTEBM9'" in GP_TY, 'Lead event is not pinned to the Residential GA4 destination')
