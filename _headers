@@ -24,6 +24,24 @@
 /404.html
   Cache-Control: public, max-age=0, must-revalidate
 
+/real-estate-videography-melbourne/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/real-estate-photography-pricing-melbourne/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/melbourne-service-areas/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/real-estate-photography-craigieburn/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/real-estate-photography-preparation-checklist/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/growthproof/*
+  Cache-Control: public, max-age=0, must-revalidate
+
 /sitemap.xml
   Cache-Control: public, max-age=3600
 
