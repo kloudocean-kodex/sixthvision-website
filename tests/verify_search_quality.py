@@ -117,6 +117,14 @@ def parse_page(path: Path) -> PageParser:
     return parser
 
 
+def verify_commercial_handoff(root: Path, failures: list[str]) -> None:
+    home = (root / "index.html").read_text(encoding="utf-8", errors="ignore")
+    target = "https://sixthvisioncommercial.com.au/commercial-property-photography-melbourne/"
+    anchor = "Commercial property photography Melbourne"
+    if target not in home or anchor not in home or "data-commercial-handoff" not in home:
+        failures.append("Residential -> Commercial contextual handoff missing")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=".")
@@ -219,6 +227,8 @@ def main() -> int:
                 target_parser = target_page[1] if target_page else parse_page(target_file)
                 if target.fragment not in target_parser.ids:
                     failures.append(f"{source_url}: missing fragment target #{target.fragment} in {target_url}")
+
+    verify_commercial_handoff(root, failures)
 
     for html_path in root.rglob("*.html"):
         text = html_path.read_text(encoding="utf-8", errors="ignore").lower()
