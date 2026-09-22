@@ -27,13 +27,16 @@ jobs:
           python-version: '3.12'
 
       - name: Compile quality checks
-        run: python3 -m py_compile tests/verify_growthproof.py tests/verify_search_quality.py tests/verify_entity_truth.py tests/verify_video_search.py scripts/summarize_lighthouse.py scripts/apply_search_ai_identity.py
+        run: python3 -m py_compile tests/verify_growthproof.py tests/verify_search_quality.py tests/verify_entity_truth.py tests/verify_claim_truth.py tests/verify_video_search.py scripts/summarize_lighthouse.py scripts/apply_search_ai_identity.py
 
       - name: Preserve GrowthProof attribution contract
         run: python3 tests/verify_growthproof.py
 
       - name: Verify approved public entity truth
         run: python3 tests/verify_entity_truth.py
+
+      - name: Verify owner-approved claim truth
+        run: python3 tests/verify_claim_truth.py
 
       - name: Verify entity generator is idempotent
         run: |
