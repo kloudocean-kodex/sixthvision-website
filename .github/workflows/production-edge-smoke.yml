@@ -85,3 +85,6 @@ jobs:
           # source and are now forbidden on the live custom-domain edge too.
           check_absent "https://sixthvision.com.au/" "118% more online views"
           check_absent "https://sixthvision.com.au/" "61% more buyer inspections"
+          check_absent "https://sixthvision.com.au/" "50,000+ Properties photographed"
+          check_absent "https://sixthvision.com.au/" "400+ Agents in our network"
+          check_absent "https://sixthvision.com.au/" "500 Shoots every month"
