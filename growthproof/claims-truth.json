@@ -1,0 +1,67 @@
+{
+  "reviewed_on": "2026-09-22",
+  "verification_basis": "Business owner attestation from Ankkush plus connected first-party Dropbox archive support where available.",
+  "owner_verified_claims": [
+    {
+      "id": "properties_photographed",
+      "value": "50,000+",
+      "required_literals": [
+        "data-count=\"50000\"",
+        "Properties photographed"
+      ]
+    },
+    {
+      "id": "melbourne_agencies",
+      "value": "60+",
+      "required_literals": [
+        "data-count=\"60\"",
+        "Melbourne agencies"
+      ]
+    },
+    {
+      "id": "agent_network",
+      "value": "400+",
+      "required_literals": [
+        "data-count=\"400\"",
+        "Agents in our network"
+      ]
+    },
+    {
+      "id": "monthly_shoots",
+      "value": "500",
+      "required_literals": [
+        "data-count=\"500\"",
+        "Shoots every month"
+      ]
+    },
+    {
+      "id": "builder_clients",
+      "value": "twenty of Melbourne's leading builders",
+      "required_literals": [
+        "twenty of Melbourne&rsquo;s leading builders"
+      ]
+    },
+    {
+      "id": "photo_turnaround",
+      "value": "24 hours",
+      "required_literals": [
+        "Photography in 24 hours"
+      ]
+    },
+    {
+      "id": "video_turnaround",
+      "value": "typically 48 hours",
+      "required_literals": [
+        "video in&nbsp;48"
+      ]
+    }
+  ],
+  "wording_rules": {
+    "full_package_must_not_imply_all_media_in_24h": true,
+    "canonical_turnaround": "Photography within 24 hours; video typically within 48 hours."
+  },
+  "unsupported_external_statistics": [
+    "118% more online views",
+    "61% more buyer inspections"
+  ]
+}

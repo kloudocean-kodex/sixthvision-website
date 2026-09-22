@@ -81,10 +81,14 @@ jobs:
           check_page "https://sixthvision.com.au/sitemap.xml" "real-estate-videography-melbourne"
           check_page "https://sixthvision.com.au/thank-you.html" "<meta name=\"robots\" content=\"noindex\""
 
-          # Evidence hygiene: unsupported legacy statistics were removed from
-          # source and are now forbidden on the live custom-domain edge too.
+          # Evidence hygiene: the external uplift percentages remain unsupported
+          # until their underlying study/methodology is archived. Owner-verified
+          # operating facts (50,000+ properties, 60+ agencies, 400+ agents,
+          # 500 shoots/month) are legitimate Sixth Vision claims and are guarded
+          # separately by tests/verify_claim_truth.py.
           check_absent "https://sixthvision.com.au/" "118% more online views"
           check_absent "https://sixthvision.com.au/" "61% more buyer inspections"
-          check_absent "https://sixthvision.com.au/" "50,000+ Properties photographed"
-          check_absent "https://sixthvision.com.au/" "400+ Agents in our network"
-          check_absent "https://sixthvision.com.au/" "500 Shoots every month"
+
+          # Live edge must preserve the canonical turnaround split rather than
+          # implying that video is covered by the 24-hour photography promise.
+          check_page "https://sixthvision.com.au/" "Photography in 24 hours; video in"
