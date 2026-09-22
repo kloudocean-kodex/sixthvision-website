@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://sixthvision.com.au/real-estate-videography-melbourne/</loc>
+    <video:video>
+      <video:thumbnail_loc>https://sixthvision.com.au/assets/img/showreel-1600.webp</video:thumbnail_loc>
+      <video:title>Sixth Vision Melbourne Property Showreel</video:title>
+      <video:description>Melbourne real estate videography showreel from Sixth Vision, including cinematic listing-film production.</video:description>
+      <video:content_loc>https://sixthvision.com.au/assets/video/showreel.mp4</video:content_loc>
+      <video:duration>72</video:duration>
+      <video:publication_date>2026-07-16</video:publication_date>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+  </url>
+</urlset>
