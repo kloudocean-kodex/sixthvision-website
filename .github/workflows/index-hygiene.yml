@@ -1,0 +1,92 @@
+name: Residential Index Hygiene
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '27 20 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: residential-index-hygiene-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify repository index hygiene
+        run: |
+          python3 -m py_compile tests/verify_index_hygiene.py
+          python3 tests/verify_index_hygiene.py
+          git diff --check
+
+      - name: Verify production has no legacy CMS or spam surface
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          check_status() {
+            local url="$1"
+            local wanted="$2"
+            local code
+            for attempt in {1..4}; do
+              code="$(curl -L --connect-timeout 10 --max-time 25 -sS -o /dev/null -w '%{http_code}' "$url" || true)"
+              if [[ "$code" == "$wanted" ]]; then
+                echo "PASS $url -> HTTP $code"
+                return 0
+              fi
+              echo "Attempt $attempt failed for $url (HTTP ${code:-curl-error}); retrying..."
+              sleep 10
+            done
+            echo "::error::Expected HTTP $wanted from $url"
+            return 1
+          }
+
+          check_absent() {
+            local url="$1"
+            local forbidden="$2"
+            local body
+            local code
+            body="$(mktemp)"
+            code="$(curl -L --connect-timeout 10 --max-time 25 -sS -o "$body" -w '%{http_code}' "$url" || true)"
+            if [[ "$code" != "200" ]]; then
+              echo "::error::Expected HTTP 200 from $url, got ${code:-curl-error}"
+              rm -f "$body"
+              return 1
+            fi
+            if grep -Fqi "$forbidden" "$body"; then
+              echo "::error::Forbidden marker found on production: $forbidden"
+              rm -f "$body"
+              return 1
+            fi
+            echo "PASS $url -> forbidden marker absent: $forbidden"
+            rm -f "$body"
+          }
+
+          while IFS= read -r legacy_path || [[ -n "$legacy_path" ]]; do
+            [[ -z "$legacy_path" ]] && continue
+            [[ "${legacy_path:0:1}" == "#" ]] && continue
+            check_status "https://sixthvision.com.au${legacy_path}" "404"
+          done < security/legacy-cms-paths.txt
+
+          while IFS= read -r marker || [[ -n "$marker" ]]; do
+            [[ -z "$marker" ]] && continue
+            [[ "${marker:0:1}" == "#" ]] && continue
+            check_absent "https://sixthvision.com.au/" "$marker"
+            check_absent "https://sixthvision.com.au/sitemap.xml" "$marker"
+          done < security/forbidden-index-markers.txt
