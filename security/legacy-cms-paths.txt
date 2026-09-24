@@ -1,0 +1,6 @@
+# Legacy CMS/runtime paths that should never resolve on the static Residential site.
+/wp-login.php
+/wp-admin/
+/xmlrpc.php
+/wp-content/
+/wp-includes/
