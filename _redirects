@@ -58,10 +58,10 @@
 /home/                        /                 301
 /index.php                    /                 301
 
-# IMPORTANT: generic WordPress runtime/archive paths are intentionally NOT
-# redirected. They have no legitimate replacement on the rebuilt static site
-# and must fall through to the real 404 response. Redirecting them to / creates
-# soft-404/index contamination and can preserve hacked/CMS residue.
+# Generic WordPress runtime/archive paths are intentionally NOT redirected.
+# They have no legitimate replacement on the rebuilt static site and must fall
+# through to the real 404 response. Redirecting them to / creates soft-404/index
+# contamination and can preserve hacked/CMS residue.
 # NOTE: no query-string rules here. Cloudflare Pages matches on PATH only, so a
 # source like "/?page_id=*" is parsed as "/" and redirects the homepage to
 # itself — an infinite loop (ERR_TOO_MANY_REDIRECTS). Old ?page_id= URLs will
