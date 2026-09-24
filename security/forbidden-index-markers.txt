@@ -1,0 +1,8 @@
+# High-signal terms that should never occur in Sixth Vision Residential public HTML/JS/CSS or sitemap.
+# Keep this list narrow to avoid false positives.
+trinocasino
+anabolika
+pinco-onlayn-kazino
+chicken road
+online casino
+casino bonus
