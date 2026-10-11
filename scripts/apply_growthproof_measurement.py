@@ -2,7 +2,8 @@ import re
 from pathlib import Path
 
 VERSION = "res-v2"
-CACHE_VERSION = "20260921a"
+CACHE_VERSION = "20261011a"
+THANK_YOU_CACHE_VERSION = "20260921a"
 
 INDEX = Path("index.html")
 THANK_YOU = Path("thank-you.html")
@@ -11,7 +12,7 @@ GP_TY_JS = Path("assets/js/growthproof-thankyou.js")
 
 INDEX_MARKER = '<script src="assets/js/main.min.js?v=20260730b" defer></script>'
 INDEX_TAG = f'<script src="assets/js/growthproof.js?v={CACHE_VERSION}" defer></script>'
-THANK_YOU_TAG = f'<script src="assets/js/growthproof-thankyou.js?v={CACHE_VERSION}" defer></script>'
+THANK_YOU_TAG = f'<script src="assets/js/growthproof-thankyou.js?v={THANK_YOU_CACHE_VERSION}" defer></script>'
 INDEX_RE = re.compile(r'<script src="assets/js/growthproof\.js\?v=[^"]+" defer></script>')
 THANK_YOU_RE = re.compile(r'<script src="assets/js/growthproof-thankyou\.js\?v=[^"]+" defer></script>')
 
@@ -135,7 +136,24 @@ GROWTHPROOF_JS = r'''(() => {
   form.addEventListener('focusin', markFormStart, { once: true });
   form.addEventListener('input', markFormStart, { once: true });
 
-  form.addEventListener('submit', () => {
+  // A native HTML POST remains in the markup for visitors without JavaScript.
+  // With JavaScript enabled, only redirect to thank-you after Web3Forms explicitly
+  // confirms delivery. A rejected access key or quota must never look like a lead.
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton ? submitButton.textContent : '';
+  const resultStatus = document.createElement('p');
+  resultStatus.className = 'form-note';
+  resultStatus.setAttribute('role', 'status');
+  resultStatus.setAttribute('aria-live', 'polite');
+  if (submitButton) submitButton.insertAdjacentElement('afterend', resultStatus);
+  else form.appendChild(resultStatus);
+
+  let sending = false;
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (sending) return;
+    sending = true;
+
     const leadId = uuid();
     const submittedAt = new Date().toISOString();
     const submitTouch = captureSubmitTouch();
@@ -159,6 +177,47 @@ GROWTHPROOF_JS = r'''(() => {
         attribution_model: 'first_and_submit_touch_v2'
       }));
     } catch (_) {}
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending enquiry…';
+    }
+    resultStatus.textContent = 'Sending your enquiry…';
+
+    try {
+      const payload = Object.fromEntries(new FormData(form).entries());
+      // redirect is for the non-JavaScript HTML fallback only. Including it
+      // in an AJAX request may produce a 303/CORS redirect instead of JSON.
+      delete payload.redirect;
+      const response = await window.fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok || !data || data.success !== true) {
+        throw new Error('The form provider did not confirm the enquiry');
+      }
+
+      resultStatus.textContent = 'Enquiry received. Opening confirmation…';
+      // The conversion event is emitted only by the existing one-shot thank-you bridge.
+      window.location.assign('https://sixthvision.com.au/thank-you.html');
+    } catch (_) {
+      // Never let a failed submission be counted via a stale pending lead ID.
+      try {
+        const saved = JSON.parse(window.sessionStorage.getItem(PENDING_KEY) || 'null');
+        if (saved && saved.lead_id === leadId) {
+          window.sessionStorage.removeItem(PENDING_KEY);
+        }
+      } catch (_) {}
+      resultStatus.textContent = 'Your enquiry was not confirmed. Please call 0474 126 276 or email sixthvision.mel@gmail.com, or try again.';
+      emit('form_submit_failed', { form_name: 'residential_enquiry' });
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+      sending = false;
+    }
   });
 })();
 '''

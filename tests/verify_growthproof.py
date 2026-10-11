@@ -23,7 +23,7 @@ require('0199e0dd-f927-4e59-be72-0d81767878f0' in INDEX, 'Web3Forms access key c
 require('https://sixthvision.com.au/thank-you.html' in INDEX, 'Web3Forms success redirect changed/missing')
 
 # GrowthProof scripts must be wired once with the current immutable cache version.
-require(INDEX.count('assets/js/growthproof.js?v=20260921a') == 1, 'GrowthProof index v2 script missing/duplicated')
+require(INDEX.count('assets/js/growthproof.js?v=20261011a') == 1, 'GrowthProof index v2 script missing/duplicated')
 require(THANK_YOU.count('assets/js/growthproof-thankyou.js?v=20260921a') == 1, 'GrowthProof thank-you v2 script missing/duplicated')
 require('growthproof.js?v=20260823a' not in INDEX, 'Stale GrowthProof index cache version remains')
 require('growthproof-thankyou.js?v=20260823a' not in THANK_YOU, 'Stale GrowthProof thank-you cache version remains')
@@ -33,6 +33,18 @@ require("const VERSION = 'res-v2'" in GP and "const VERSION = 'res-v2'" in GP_TY
 for event in ['phone_click', 'email_click', 'whatsapp_click', 'commercial_handoff', 'book_shoot_click', 'package_view', 'form_start']:
     require(event in GP, f'Missing event: {event}')
 require('generate_lead' not in GP, 'generate_lead must not fire before Web3Forms success redirect')
+
+# AJAX enhancement must keep the native POST/redirect as its no-JS fallback,
+# and never show a false success or create a GA4 lead before provider acceptance.
+require('method="POST"' in INDEX and 'name="redirect"' in INDEX, 'No-JavaScript Web3Forms fallback missing')
+require("delete payload.redirect" in GP, 'AJAX payload must omit the HTML-only redirect field')
+require("'Content-Type': 'application/json'" in GP, 'Web3Forms AJAX must send JSON')
+require('data.success !== true' in GP and '!response.ok' in GP, 'Submission acceptance check missing')
+require("window.location.assign('https://sixthvision.com.au/thank-you.html')" in GP, 'Success redirect missing')
+require("window.sessionStorage.removeItem(PENDING_KEY)" in GP, 'Failed lead pending state must be cleared')
+require('form_submit_failed' in GP and "aria-live" in GP, 'Accessible failure feedback missing')
+require('submitButton.disabled = true' in GP and 'submitButton.disabled = false' in GP, 'Double-submit guard/recovery missing')
+
 require('data-commercial-handoff' in INDEX, 'Commercial handoff marker missing from Residential navigation')
 require('utm_campaign=residential_commercial_handoff' in INDEX, 'Commercial handoff UTM attribution missing')
 require("destination: 'sixthvisioncommercial.com.au'" in GP, 'Commercial handoff destination marker missing')
