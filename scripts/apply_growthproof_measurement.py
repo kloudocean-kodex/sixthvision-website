@@ -16,8 +16,7 @@ THANK_YOU_TAG = f'<script src="assets/js/growthproof-thankyou.js?v={THANK_YOU_CA
 INDEX_RE = re.compile(r'<script src="assets/js/growthproof\.js\?v=[^"]+" defer></script>')
 THANK_YOU_RE = re.compile(r'<script src="assets/js/growthproof-thankyou\.js\?v=[^"]+" defer></script>')
 
-GROWTHPROOF_JS = r'''
-(() => {
+GROWTHPROOF_JS = r'''(() => {
   'use strict';
 
   const VERSION = 'res-v2';
