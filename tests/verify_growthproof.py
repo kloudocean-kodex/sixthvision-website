@@ -23,7 +23,7 @@ require('0199e0dd-f927-4e59-be72-0d81767878f0' in INDEX, 'Web3Forms access key c
 require('https://sixthvision.com.au/thank-you.html' in INDEX, 'Web3Forms success redirect changed/missing')
 
 # GrowthProof scripts must be wired once with the current immutable cache version.
-require(INDEX.count('assets/js/growthproof.js?v=20261011a') == 1, 'GrowthProof index v2 script missing/duplicated')
+require(INDEX.count('assets/js/growthproof.js?v=20261011b') == 1, 'GrowthProof index v2 script missing/duplicated')
 require(THANK_YOU.count('assets/js/growthproof-thankyou.js?v=20260921a') == 1, 'GrowthProof thank-you v2 script missing/duplicated')
 require('growthproof.js?v=20260823a' not in INDEX, 'Stale GrowthProof index cache version remains')
 require('growthproof-thankyou.js?v=20260823a' not in THANK_YOU, 'Stale GrowthProof thank-you cache version remains')
@@ -43,6 +43,11 @@ require('data.success !== true' in GP and '!response.ok' in GP, 'Submission acce
 require("window.location.assign('https://sixthvision.com.au/thank-you.html')" in GP, 'Success redirect missing')
 require("window.sessionStorage.removeItem(PENDING_KEY)" in GP, 'Failed lead pending state must be cleared')
 require('form_submit_failed' in GP and "aria-live" in GP, 'Accessible failure feedback missing')
+require('function showRecovery()' in GP and 'showRecovery();' in GP, 'Failure recovery helper missing')
+for recovery_url in ('tel:+61474126276', 'mailto:sixthvision.mel@gmail.com', 'https://wa.me/61474126276'):
+    require(recovery_url in GP, f'Accessible fallback missing: {recovery_url}')
+require('resultStatus.appendChild(link)' in GP, 'Recovery actions must be clickable')
+
 require('submitButton.disabled = true' in GP and 'submitButton.disabled = false' in GP, 'Double-submit guard/recovery missing')
 
 require('data-commercial-handoff' in INDEX, 'Commercial handoff marker missing from Residential navigation')
