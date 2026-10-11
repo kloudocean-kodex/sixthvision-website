@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 VERSION = "res-v2"
-CACHE_VERSION = "20261011a"
+CACHE_VERSION = "20261011b"
 THANK_YOU_CACHE_VERSION = "20260921a"
 
 INDEX = Path("index.html")
@@ -148,6 +148,30 @@ GROWTHPROOF_JS = r'''(() => {
   if (submitButton) submitButton.insertAdjacentElement('afterend', resultStatus);
   else form.appendChild(resultStatus);
 
+  // Recovery links remain inside the same accessible status message so
+  // keyboard and phone users can act without copying an address manually.
+  // The existing delegated link listener tracks phone/email/WhatsApp once.
+  function showRecovery() {
+    resultStatus.textContent = 'Your enquiry was not confirmed. ';
+    const options = [
+      ['tel:+61474126276', 'Call 0474 126 276'],
+      ['mailto:sixthvision.mel@gmail.com', 'Email Sixth Vision'],
+      ['https://wa.me/61474126276', 'WhatsApp']
+    ];
+    options.forEach(([href, label], i) => {
+      if (i > 0) resultStatus.appendChild(document.createTextNode(' · '));
+      const link = document.createElement('a');
+      link.href = href;
+      link.textContent = label;
+      if (href.startsWith('https://')) {
+        link.target = '_blank';
+        link.rel = 'noopener';
+      }
+      resultStatus.appendChild(link);
+    });
+    resultStatus.appendChild(document.createTextNode(' — or retry without losing the details above.'));
+  }
+
   let sending = false;
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -210,7 +234,7 @@ GROWTHPROOF_JS = r'''(() => {
           window.sessionStorage.removeItem(PENDING_KEY);
         }
       } catch (_) {}
-      resultStatus.textContent = 'Your enquiry was not confirmed. Please call 0474 126 276 or email sixthvision.mel@gmail.com, or try again.';
+      showRecovery();
       emit('form_submit_failed', { form_name: 'residential_enquiry' });
       if (submitButton) {
         submitButton.disabled = false;
