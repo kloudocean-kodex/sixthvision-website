@@ -182,7 +182,7 @@
       }
 
       resultStatus.textContent = 'Enquiry received. Opening confirmation…';
-      // generate_lead is emitted only by the existing one-shot thank-you bridge.
+      // The conversion event is emitted only by the existing one-shot thank-you bridge.
       window.location.assign('https://sixthvision.com.au/thank-you.html');
     } catch (_) {
       // Never let a failed submission be counted via a stale pending lead ID.
